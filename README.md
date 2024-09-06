@@ -39,7 +39,7 @@ pnpx prisma migrate reset
 Run the development server with the following command:
 
 ```bash
-pnpm run dev
+pnpm dev
 ```
 
 The development server should now be running. You can access the application at _http://localhost:3001_.
