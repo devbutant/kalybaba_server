@@ -67,8 +67,7 @@ export class SocketEvent {
         if (userId) {
             const user = await this.userService.user({ id: userId });
             if (user) {
-                console.log("User info:", user.name);
-                this.server.emit("message", user.name, data);
+                this.server.emit("message", user.name, userId, data);
             } else {
                 console.log("User not found for ID:", userId);
             }

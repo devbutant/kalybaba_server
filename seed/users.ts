@@ -25,4 +25,30 @@ export const users = [
             updatedAt: new Date(),
         },
     },
+    {
+        where: { email: "admin@example.com" },
+        update: {},
+        create: {
+            email: "admin1@example.com",
+            name: "Mymi",
+            password: "admin",
+            address: "Grenoble",
+            phone: "0600000001",
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        },
+    },
+    {
+        where: { email: "admin@example.com" },
+        update: {},
+        create: {
+            email: "admin2@example.com",
+            name: "Boubou",
+            password: "admin",
+            address: "New York",
+            phone: "0600000001",
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        },
+    },
 ];
