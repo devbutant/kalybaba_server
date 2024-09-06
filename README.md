@@ -42,4 +42,13 @@ Run the development server with the following command:
 pnpm dev
 ```
 
+### 6. Start Prisma Studio
+
+To interact with your database visually using Prisma Studio, run the following command:
+This will launch Prisma Studio in your browser, where you can view and edit your database records.
+
+```bash
+pnpx prisma studio
+```
+
 The development server should now be running. You can access the application at _http://localhost:3001_.
