@@ -14,6 +14,7 @@ model User {
   password  String
   address   String
   phone     String?
+  connected Boolean  @default(false)
   ads       Ad[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

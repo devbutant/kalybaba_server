@@ -43,6 +43,16 @@ export class UserService implements UserServiceInterface {
         });
     }
 
+    async updateUserConnectionStatus(
+        email: string,
+        connected: boolean
+    ): Promise<User> {
+        return this.prisma.user.update({
+            where: { email: email },
+            data: { connected },
+        });
+    }
+
     async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<void> {
         await this.prisma.user.delete({
             where,

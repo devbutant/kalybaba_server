@@ -1,11 +1,11 @@
-# tu-trouves-tout-ici-camarade_server
+# yadetout_server
 
 ### 1. Clone the Repository:
 
 Clone the repository you just created to your local machine using Git:
 
 ```bash
-git clone https://github.com/devbutime/tu-trouves-tout-ici-camarade_server.git
+git clone https://github.com/devbutime/yadetout_server.git
 ```
 
 ### 2. Install Dependencies

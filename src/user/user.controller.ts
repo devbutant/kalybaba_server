@@ -5,6 +5,7 @@ import {
     Get,
     Param,
     Patch,
+    Request,
     UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
@@ -19,6 +20,27 @@ import { UserService } from "./user.service";
 @UseGuards(JwtAuthGuard)
 export class UserController {
     constructor(private readonly userService: UserService) {}
+
+    @Patch("connected")
+    async updateUserConnectionStatus(
+        @Request() req: any,
+        @Body("connected") connected: boolean
+    ): Promise<UserModel> {
+        try {
+            const userEmail = req.user.userId;
+
+            const updatedUser =
+                await this.userService.updateUserConnectionStatus(
+                    userEmail,
+                    connected
+                );
+            return updatedUser;
+        } catch (error: unknown) {
+            throw new Error(
+                error instanceof Error ? error.message : "An error occurred"
+            );
+        }
+    }
 
     @Get()
     async getAllUsers(): Promise<Omit<UserModel, "password">[]> {
