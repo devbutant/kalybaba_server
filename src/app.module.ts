@@ -5,6 +5,7 @@ import { AppController } from "./app.controller";
 import { AuthModule } from "./auth/auth.module";
 import { UserModule } from "./user/user.module";
 import { SocketModule } from './socket/socket.module';
+import { FriendsModule } from './friends/friends.module';
 
 @Module({
     imports: [
@@ -15,6 +16,7 @@ import { SocketModule } from './socket/socket.module';
         AdModule,
         AuthModule,
         SocketModule,
+        FriendsModule,
     ],
     controllers: [AppController],
     providers: [],

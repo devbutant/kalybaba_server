@@ -16,24 +16,26 @@ model User {
   phone     String?
   connected Boolean  @default(false)
   ads       Ad[]
+  friends   User[]   @relation("UserFriends")
+  friendOf  User[]   @relation("UserFriends")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Ad {
-  id          String    @id @default(cuid())
+  id          String   @id @default(cuid())
   title       String
   description String?
   address     String
   price       Float    @default(0)
-  author      User      @relation(fields: [authorId], references: [id])
+  author      User     @relation(fields: [authorId], references: [id])
   authorId    String
   category    Category @relation(fields: [categoryId], references: [id])
   categoryId  String
   type        Type     @relation(fields: [typeId], references: [id])
   typeId      String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Category {

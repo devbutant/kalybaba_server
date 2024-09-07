@@ -16,7 +16,7 @@ export class UserService implements UserServiceInterface {
     async users(): Promise<Omit<User, "password">[]> {
         const users = await this.prisma.user.findMany({
             include: {
-                ads: true,
+                ads: false,
             },
         });
         return users.map((user) => this.excludePassword(user));
@@ -28,7 +28,7 @@ export class UserService implements UserServiceInterface {
         return this.prisma.user.findUnique({
             where: userWhereUniqueInput,
             include: {
-                ads: true,
+                ads: false,
             },
         });
     }
@@ -37,7 +37,7 @@ export class UserService implements UserServiceInterface {
         return this.prisma.user.update({
             where: { id: id },
             include: {
-                ads: true,
+                ads: false,
             },
             data: updateUserData as Prisma.UserUpdateInput,
         });
@@ -57,7 +57,7 @@ export class UserService implements UserServiceInterface {
         await this.prisma.user.delete({
             where,
             include: {
-                ads: true,
+                ads: false,
             },
         });
     }

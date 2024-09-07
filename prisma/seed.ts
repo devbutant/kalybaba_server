@@ -1,9 +1,10 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import { ads } from "../seed/ads";
 import { categories } from "../seed/categories";
 import { types } from "../seed/types";
 import { users } from "../seed/users";
 import { hashPassword } from "../seed/utils";
+
 const prisma = new PrismaClient();
 
 async function main() {
@@ -40,6 +41,8 @@ async function main() {
         "divers",
     ];
 
+    const createdUsers: User[] = [];
+
     for (const user of users) {
         const hashedPassword = await hashPassword(user.create.password);
 
@@ -56,6 +59,8 @@ async function main() {
                 updatedAt: new Date(),
             },
         });
+
+        createdUsers.push(newUser);
 
         for (const ad of ads) {
             const typeIdCreated = await prisma.type.findUnique({
@@ -84,7 +89,43 @@ async function main() {
             });
         }
     }
+
+    for (const user of createdUsers) {
+        // Exclude current user
+        const potentialFriends = createdUsers.filter((u) => u.id !== user.id);
+
+        // Select random number of friends to add (0-3)
+        const numFriends = Math.floor(Math.random() * 4);
+
+        const shuffledFriends = potentialFriends.sort(
+            () => Math.random() - 0.5
+        );
+        const friendsToAdd = shuffledFriends.slice(0, numFriends);
+
+        // Add Friends to User's friends list
+        await prisma.user.update({
+            where: { id: user.id },
+            data: {
+                friends: {
+                    connect: friendsToAdd.map((friend) => ({ id: friend.id })),
+                },
+            },
+        });
+
+        // Add User to Friends' friends list
+        for (const friend of friendsToAdd) {
+            await prisma.user.update({
+                where: { id: friend.id },
+                data: {
+                    friends: {
+                        connect: { id: user.id },
+                    },
+                },
+            });
+        }
+    }
 }
+
 main()
     .then(async () => {
         await prisma.$disconnect();
