@@ -10,8 +10,8 @@ async function bootstrap() {
 
     const config = new DocumentBuilder()
         .addBearerAuth()
-        .setTitle("NestJS REST API")
-        .setDescription("NestJS REST API")
+        .setTitle("Yadetout API")
+        .setDescription("Yadetout API")
         .setVersion("1.0")
         .build();
     const document = SwaggerModule.createDocument(app, config);
