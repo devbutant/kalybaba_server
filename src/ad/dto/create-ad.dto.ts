@@ -5,7 +5,8 @@ import {
     MaxLength,
     MinLength,
 } from "class-validator";
-import { IsCuid } from "src/decorators/IsCUID";
+
+import { IsCuid } from "../../../src/decorators/IsCUID";
 
 export class CreateAdDto {
     @IsString()
