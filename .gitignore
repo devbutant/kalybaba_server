@@ -1,8 +1,15 @@
+# Node.js dependencies
 node_modules
-# Keep environment variables out of version control
+
+# Environment variables
 .env
 
-__notes
+# Production build output
 dist
-conception
+
+# Vercel-related configurations
 .vercel
+
+# Local development notes and other non-repo files
+__notes
+conception
