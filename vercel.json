@@ -2,7 +2,7 @@
     "version": 2,
     "builds": [
         {
-            "src": "dist/src/main.ts",
+            "src": "dist/main.js",
             "use": "@vercel/node"
         }
     ],
@@ -10,7 +10,15 @@
         {
             "src": "/(.*)",
             "dest": "dist/main.js",
-            "methods": ["GET", "POST", "PUT", "PATCH", "DELETE"]
+            "methods": [
+                "GET",
+                "POST",
+                "PUT",
+                "PATCH",
+                "DELETE",
+                "HEAD",
+                "OPTIONS"
+            ]
         }
     ]
 }
