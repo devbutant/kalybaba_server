@@ -19,7 +19,16 @@ export class AdService implements AdServiceInterface {
         });
     }
 
-    async ads(id: string): Promise<Ad[]> {
+    async ads(): Promise<Ad[]> {
+        return this.prisma.ad.findMany({
+            include: {
+                type: true,
+                category: true,
+            },
+        });
+    }
+
+    async myAds(id: string): Promise<Ad[]> {
         return this.prisma.ad.findMany({
             where: { authorId: id },
             include: {

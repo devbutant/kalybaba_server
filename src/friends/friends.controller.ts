@@ -18,12 +18,12 @@ import { FriendsService } from "./friends.service";
 export class FriendsController {
     constructor(private readonly friendsService: FriendsService) {}
 
-    @Post("add")
+    @Post()
     async addFriend(@Body() body: { userId: string; friendId: string }) {
         return this.friendsService.addFriend(body.userId, body.friendId);
     }
 
-    @Get("list")
+    @Get()
     async listFriends(@Request() req: any) {
         try {
             const userEmail = req.user.userId;
@@ -36,7 +36,7 @@ export class FriendsController {
         }
     }
 
-    @Delete("remove")
+    @Delete()
     async removeFriend(@Body() body: { userId: string; friendId: string }) {
         return this.friendsService.removeFriend(body.userId, body.friendId);
     }

@@ -8,6 +8,7 @@ import { hashPassword } from "../seed/utils";
 const prisma = new PrismaClient();
 
 async function main() {
+    // Assurez-vous que les types et catégories existent
     for (const type of types) {
         await prisma.type.upsert({
             where: { name: type.where.name },
@@ -43,6 +44,10 @@ async function main() {
 
     const createdUsers: User[] = [];
 
+    // Diviser les annonces en groupes pour chaque utilisateur
+    const adsPerUser = Math.floor(ads.length / users.length);
+    let leftoverAds = ads.length % users.length;
+
     for (const user of users) {
         const hashedPassword = await hashPassword(user.create.password);
 
@@ -62,7 +67,12 @@ async function main() {
 
         createdUsers.push(newUser);
 
-        for (const ad of ads) {
+        // Calculer l'indice de début et de fin pour les annonces
+        const startIndex = users.indexOf(user) * adsPerUser;
+        const endIndex = startIndex + adsPerUser + (leftoverAds > 0 ? 1 : 0);
+
+        // Assigner les annonces à l'utilisateur
+        for (const ad of ads.slice(startIndex, endIndex)) {
             const typeIdCreated = await prisma.type.findUnique({
                 where: {
                     name: typesArray[
@@ -88,13 +98,19 @@ async function main() {
                 },
             });
         }
+
+        // Réduire le nombre d'annonces restantes à distribuer
+        if (leftoverAds > 0) {
+            leftoverAds--;
+        }
     }
 
+    // Ajouter des amis pour chaque utilisateur
     for (const user of createdUsers) {
-        // Exclude current user
+        // Exclure l'utilisateur actuel
         const potentialFriends = createdUsers.filter((u) => u.id !== user.id);
 
-        // Select random number of friends to add (0-3)
+        // Sélectionner un nombre aléatoire d'amis à ajouter (0-3)
         const numFriends = Math.floor(Math.random() * 4);
 
         const shuffledFriends = potentialFriends.sort(
@@ -102,7 +118,7 @@ async function main() {
         );
         const friendsToAdd = shuffledFriends.slice(0, numFriends);
 
-        // Add Friends to User's friends list
+        // Ajouter des amis à la liste d'amis de l'utilisateur
         await prisma.user.update({
             where: { id: user.id },
             data: {
@@ -112,7 +128,7 @@ async function main() {
             },
         });
 
-        // Add User to Friends' friends list
+        // Ajouter l'utilisateur aux amis des amis
         for (const friend of friendsToAdd) {
             await prisma.user.update({
                 where: { id: friend.id },

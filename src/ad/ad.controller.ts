@@ -3,7 +3,6 @@ import {
     Controller,
     Delete,
     Get,
-    Headers,
     Param,
     Patch,
     Post,
@@ -34,15 +33,9 @@ export class AdController {
     }
 
     @Get()
-    findAll(@Headers("authorization") authorizationHeader: string) {
-        if (!authorizationHeader) {
-            throw new UnauthorizedException("Authorization header is missing");
-        }
-
-        const token = authorizationHeader.replace("Bearer ", "");
+    findAll() {
         try {
-            const decodedToken = this.jwtService.verify(token);
-            return this.adService.ads(decodedToken.id);
+            return this.adService.ads();
         } catch (error) {
             throw new UnauthorizedException("Invalid token");
         }
