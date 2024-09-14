@@ -6,7 +6,6 @@ import {
     Param,
     Patch,
     Post,
-    UnauthorizedException,
     UseGuards,
 } from "@nestjs/common";
 
@@ -34,11 +33,7 @@ export class AdController {
 
     @Get()
     findAll() {
-        try {
-            return this.adService.ads();
-        } catch (error) {
-            throw new UnauthorizedException("Invalid token");
-        }
+        return this.adService.ads();
     }
 
     @Get(":id")
