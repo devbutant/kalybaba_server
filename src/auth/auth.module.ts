@@ -18,8 +18,8 @@ import { LocalStrategy } from "./local.strategy";
             imports: [ConfigModule],
             inject: [ConfigService],
             useFactory: (configService: ConfigService) => ({
-                secret: configService.get<string>("JWT_SECRET_PASSPHRASE"), // Charger le secret depuis les variables d'environnement
-                signOptions: { expiresIn: "6000s" }, // Ajuster selon vos besoins
+                secret: configService.get<string>("JWT_SECRET_PASSPHRASE"),
+                signOptions: { expiresIn: "6000s" },
             }),
         }),
     ],
