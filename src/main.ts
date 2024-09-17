@@ -10,7 +10,6 @@ async function bootstrap() {
         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
         credentials: true,
     });
-
     app.useGlobalPipes(new ValidationPipe());
 
     const config = new DocumentBuilder()
