@@ -5,7 +5,7 @@ import {
     Get,
     Param,
     Patch,
-    Req,
+    Request,
     UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
@@ -23,7 +23,7 @@ export class UserController {
 
     @Patch("connected")
     async updateUserConnectionStatus(
-        @Req() req: any,
+        @Request() req: any,
         @Body("connected") connected: boolean
     ): Promise<UserModel> {
         try {
