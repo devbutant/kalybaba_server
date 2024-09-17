@@ -1,10 +1,8 @@
-import { Module, RequestMethod } from "@nestjs/common";
-import { MiddlewareConsumer } from "@nestjs/common/interfaces";
+import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { AdModule } from "./ad/ad.module";
 import { AppController } from "./app.controller";
 import { AuthModule } from "./auth/auth.module";
-import { CookieLoggerMiddleware } from "./cookie.middleware";
 import { FriendsModule } from "./friends/friends.module";
 import { RoomsModule } from "./rooms/rooms.module";
 import { SocketModule } from "./socket/socket.module";
@@ -25,10 +23,4 @@ import { UserModule } from "./user/user.module";
     controllers: [AppController],
     providers: [],
 })
-export class AppModule {
-    configure(consumer: MiddlewareConsumer) {
-        consumer
-            .apply(CookieLoggerMiddleware)
-            .forRoutes({ path: "*", method: RequestMethod.ALL });
-    }
-}
+export class AppModule {}

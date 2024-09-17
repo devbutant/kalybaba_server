@@ -6,6 +6,6 @@ export interface AuthServiceInterface {
     login(
         email: LoginDto["email"],
         password: LoginDto["password"]
-    ): Promise<string>;
+    ): Promise<{ access_token: string }>;
     register(registerDto: RegisterDto): Promise<User>;
 }

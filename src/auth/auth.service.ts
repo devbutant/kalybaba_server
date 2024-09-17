@@ -36,11 +36,12 @@ export class AuthService implements AuthServiceInterface {
         return result;
     }
 
-    async login(user: any): Promise<string> {
+    async login(user: any): Promise<{ access_token: string }> {
         const payload = { sub: user.email, id: user.id };
-        const token = await this.jwtService.signAsync(payload);
 
-        return token;
+        return {
+            access_token: await this.jwtService.signAsync(payload),
+        };
     }
 
     async register(userRegisterData: RegisterDto): Promise<User> {

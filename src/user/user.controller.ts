@@ -27,10 +27,6 @@ export class UserController {
         @Body("connected") connected: boolean
     ): Promise<UserModel> {
         try {
-            console.log(req);
-            console.log("req");
-            return;
-
             const userEmail = req.user.userId;
 
             const updatedUser =
