@@ -14,8 +14,8 @@ async function bootstrap() {
 
     const config = new DocumentBuilder()
         .addBearerAuth()
-        .setTitle("Yadetout API")
-        .setDescription("Yadetout API")
+        .setTitle("KalyBaba API")
+        .setDescription("KalyBaba API")
         .setVersion("1.0")
         .build();
     const document = SwaggerModule.createDocument(app, config);
