@@ -6,22 +6,25 @@ import {
     Param,
     Patch,
     Post,
-    Req,
     UseGuards,
 } from "@nestjs/common";
-import { Request } from "express";
 
-import { ApiTags } from "@nestjs/swagger";
+import { JwtService } from "@nestjs/jwt";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { AdService } from "./ad.service";
 import { CreateAdDto } from "./dto/create-ad.dto";
 import { UpdateAdDto } from "./dto/update-ad.dto";
 
 @ApiTags("ads")
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller("ads")
 export class AdController {
-    constructor(private readonly adService: AdService) {}
+    constructor(
+        private readonly adService: AdService,
+        private jwtService: JwtService
+    ) {}
 
     @Post()
     create(@Body() createAdDto: CreateAdDto) {
@@ -29,7 +32,7 @@ export class AdController {
     }
 
     @Get()
-    findAll(@Req() request: Request) {
+    findAll() {
         return this.adService.ads();
     }
 
