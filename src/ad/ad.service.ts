@@ -46,6 +46,7 @@ export class AdService implements AdServiceInterface {
             include: {
                 type: true,
                 category: true,
+                author: true,
             },
         });
     }
