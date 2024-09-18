@@ -32,7 +32,7 @@ export class AdController {
         return this.adService.ads();
     }
 
-    @Get(":id")
+    @Get("/:id")
     findOne(@Param("id") id: string) {
         return this.adService.ad(id);
     }
