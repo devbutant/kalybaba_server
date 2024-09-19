@@ -40,8 +40,8 @@ export class CreateAdDto {
     type: { connect: { id: string } };
 
     @IsDate()
-    createdAt: Date;
+    createdAt: Date = new Date(); // Valeur par défaut : Date actuelle
 
     @IsDate()
-    updatedAt: Date;
+    updatedAt: Date = new Date(); // Valeur par défaut : Date actuelle
 }

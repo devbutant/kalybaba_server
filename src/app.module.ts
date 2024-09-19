@@ -3,9 +3,11 @@ import { ConfigModule } from "@nestjs/config";
 import { AdModule } from "./ad/ad.module";
 import { AppController } from "./app.controller";
 import { AuthModule } from "./auth/auth.module";
+import { CategoryModule } from "./category/category.module";
 import { FriendsModule } from "./friends/friends.module";
 import { RoomsModule } from "./rooms/rooms.module";
 import { SocketModule } from "./socket/socket.module";
+import { TypeModule } from "./type/type.module";
 import { UserModule } from "./user/user.module";
 
 @Module({
@@ -19,6 +21,8 @@ import { UserModule } from "./user/user.module";
         SocketModule,
         FriendsModule,
         RoomsModule,
+        TypeModule,
+        CategoryModule,
     ],
     controllers: [AppController],
     providers: [],
