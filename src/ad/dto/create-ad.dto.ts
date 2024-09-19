@@ -6,8 +6,6 @@ import {
     MinLength,
 } from "class-validator";
 
-import { IsCuid } from "../../../src/decorators/IsCUID";
-
 export class CreateAdDto {
     @IsString()
     @MinLength(2)
@@ -27,21 +25,18 @@ export class CreateAdDto {
     @IsNumber()
     price: number;
 
-    @IsCuid()
     authorId: string;
     author: { connect: { id: string } };
 
-    @IsCuid()
     categoryId: string;
     category: { connect: { id: string } };
 
-    @IsCuid()
     typeId: string;
     type: { connect: { id: string } };
 
     @IsDate()
-    createdAt: Date;
+    createdAt: Date = new Date(); // Valeur par défaut : Date actuelle
 
     @IsDate()
-    updatedAt: Date;
+    updatedAt: Date = new Date(); // Valeur par défaut : Date actuelle
 }
