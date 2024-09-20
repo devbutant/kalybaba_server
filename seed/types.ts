@@ -1,9 +1,9 @@
 export const types = [
     {
-        where: { name: "échange" },
+        where: { name: "echange" },
         update: {},
         create: {
-            name: "échange",
+            name: "echange",
             description: "transaction d'un bien contre un autre",
         },
     },

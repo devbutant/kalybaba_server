@@ -31,7 +31,7 @@ async function main() {
         });
     }
 
-    const typesArray = ["achat", "échange", "location", "service", "prêt"];
+    const typesArray = ["achat", "echange", "location", "service", "prêt"];
     const categoriesArray = [
         "mode",
         "meubles",
