@@ -71,4 +71,12 @@ export const categories = [
             description: "articles de sport",
         },
     },
+    {
+        where: { name: "mode" },
+        update: {},
+        create: {
+            name: "mode",
+            description: "vêtements et accessoires de mode",
+        },
+    },
 ];
