@@ -1,58 +1,42 @@
 export const categories = [
     {
-        where: { name: "mode" },
+        where: { name: "location" },
         update: {},
         create: {
-            name: "mode",
-            description: "vêtements et accessoires",
+            name: "location",
+            description: "biens immobiliers à louer",
         },
     },
     {
-        where: { name: "meubles" },
+        where: { name: "colocation" },
         update: {},
         create: {
-            name: "meubles",
-            description: "meubles et décoration",
+            name: "colocation",
+            description: "offres de colocation",
         },
     },
     {
-        where: { name: "multimédia" },
+        where: { name: "vente" },
         update: {},
         create: {
-            name: "multimédia",
-            description: "électronique et informatique",
+            name: "vente",
+            description: "biens immobiliers à vendre",
         },
     },
     {
-        where: { name: "véhicules" },
+        where: { name: "bureaux / commerce" },
         update: {},
         create: {
-            name: "véhicules",
-            description: "moyen de transport",
+            name: "bureaux / commerce",
+            description: "locaux professionnels et commerciaux",
         },
     },
     {
-        where: { name: "loisirs" },
+        where: { name: "services de déménagement" },
         update: {},
         create: {
-            name: "loisirs",
-            description: "activités de loisirs",
-        },
-    },
-    {
-        where: { name: "animaux" },
-        update: {},
-        create: {
-            name: "animaux",
-            description: "animaux de compagnie",
-        },
-    },
-    {
-        where: { name: "divers" },
-        update: {},
-        create: {
-            name: "divers",
-            description: "autres catégories",
+            name: "services de déménagement",
+            description: "services liés au déménagement",
         },
     },
 ];

@@ -31,15 +31,13 @@ async function main() {
         });
     }
 
-    const typesArray = ["achat", "echange", "location", "service", "prêt"];
+    const typesArray = ["maison", "appartement", "terrain", "parking", "autre"];
     const categoriesArray = [
-        "mode",
-        "meubles",
-        "multimédia",
-        "véhicules",
-        "loisirs",
-        "animaux",
-        "divers",
+        "location",
+        "colocation",
+        "vente",
+        "bureaux / commerce",
+        "services de déménagement",
     ];
 
     const createdUsers: User[] = [];
