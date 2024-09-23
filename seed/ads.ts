@@ -1,88 +1,4 @@
 export const ads = [
-    // Annonces existantes
-    {
-        title: "Changement de phare Golf 5",
-        description:
-            "Recherche un mécanicien pour changer un phare avant droit sur une Golf 4",
-        address: "Paris",
-        price: 30,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        title: "Epices pour cuisine indienne",
-        description:
-            "Les magasins sont fermés, je cherche des épices pour cuisine indienne, urgent svp !",
-        address: "Paris",
-        price: 5,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        title: "Essai de la nouvelle Tesla",
-        description:
-            "Je cherche quelqu'un qui possède la nouvelle Tesla pour un essai, je suis prêt à payer 70€ pour 1h de conduite",
-        address: "Paris",
-        price: 70,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        title: "2 VTT taille L et M",
-        description:
-            "Nous cherchons à emprunter deux VTT pour une balade en couple, taille L et M",
-        address: "Marseille",
-        price: 0,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        title: "Carte éléctronique TV LG 42PQ3000",
-        description:
-            "Je recherche une carte éléctronique pour une TV LG 42PQ3000, la mienne est HS, impossible de trouver la référence exacte. Aux alentours de 30€ svp max svp, merci.",
-        address: "Marseille",
-        price: 30,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        title: "Clavier mécanique MX Keys mechanical blanc",
-        description:
-            "Quelqu'un aurait-il un clavier mécanique MX Keys mechanical blanc à vendre ? Je suis preneur ! Prix max : 70€",
-        address: "Marseille",
-        price: 70,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-
-    // Nouvelles annonces
-    {
-        title: "Table de jardin en teck",
-        description:
-            "Table de jardin en teck, en bon état, parfait pour l'été !",
-        address: "Lyon",
-        price: 120,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        title: "Vente de guitare électrique",
-        description:
-            "Guitare électrique Ibanez, état impeccable, avec ampli et accessoires.",
-        address: "Lyon",
-        price: 250,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        title: "Console Nintendo Switch avec jeux",
-        description:
-            "Console Nintendo Switch en très bon état avec 5 jeux inclus.",
-        address: "Bordeaux",
-        price: 300,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
     {
         title: "Location appartement 2 pièces",
         description:
@@ -93,104 +9,163 @@ export const ads = [
         updatedAt: new Date(),
     },
     {
-        title: "Lave-linge Samsung",
-        description: "Lave-linge Samsung, peu utilisé, encore sous garantie.",
-        address: "Toulouse",
-        price: 200,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        title: "Tapis oriental",
-        description: "Tapis oriental authentique en laine, en excellent état.",
-        address: "Toulouse",
-        price: 150,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        title: "Grille-pain en inox",
+        title: "Vente maison familiale",
         description:
-            "Grille-pain en inox, fonctionne parfaitement, presque neuf.",
-        address: "Nice",
-        price: 20,
+            "Maison familiale spacieuse avec jardin à Toulouse, proche des écoles.",
+        address: "Toulouse",
+        price: 350000,
         createdAt: new Date(),
         updatedAt: new Date(),
     },
     {
-        title: "Ski et bâtons pour débutant",
+        title: "Colocation dans un appartement moderne",
         description:
-            "Set de ski et bâtons pour débutant, taille M, peu utilisé.",
-        address: "Nice",
-        price: 80,
+            "Chambre disponible en colocation dans un appartement moderne à Lyon.",
+        address: "Lyon",
+        price: 400,
         createdAt: new Date(),
         updatedAt: new Date(),
     },
     {
-        title: "Montre connectée Samsung",
-        description: "Montre connectée Samsung Galaxy Watch, en parfait état.",
+        title: "Vente de terrain constructible",
+        description:
+            "Terrain constructible de 600 m² à vendre près de Nice, idéal pour projet immobilier.",
+        address: "Nice",
+        price: 150000,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    },
+    {
+        title: "Location studio meublé",
+        description:
+            "Studio meublé à louer à Strasbourg, idéal pour étudiants ou jeunes professionnels.",
+        address: "Strasbourg",
+        price: 600,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    },
+    {
+        title: "Vente d'un appartement avec vue mer",
+        description:
+            "Appartement de 3 pièces avec vue sur la mer à Marseille, récemment rénové.",
+        address: "Marseille",
+        price: 280000,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    },
+    {
+        title: "Location de bureaux à Paris",
+        description:
+            "Bureaux à louer dans le quartier des affaires de Paris, espace moderne et lumineux.",
+        address: "Paris",
+        price: 2500,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    },
+    {
+        title: "Vente d'un duplex à Lille",
+        description:
+            "Duplex de 4 pièces en plein cœur de Lille, avec balcon et garage.",
         address: "Lille",
+        price: 320000,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    },
+    {
+        title: "Location d'un garage",
+        description: "Garage à louer à Nantes, sécurisé et facile d'accès.",
+        address: "Nantes",
         price: 100,
         createdAt: new Date(),
         updatedAt: new Date(),
     },
     {
-        title: "Chaise de bureau ergonomique",
+        title: "Vente d'un studio",
         description:
-            "Chaise de bureau ergonomique, réglable, très confortable.",
-        address: "Lille",
-        price: 90,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        title: "Poussette pour bébé",
-        description: "Poussette pour bébé, modèle pliable, très pratique.",
-        address: "Strasbourg",
-        price: 70,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        title: "Cage pour animaux",
-        description: "Cage pour petits animaux, en métal, avec accessoires.",
-        address: "Strasbourg",
-        price: 50,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        title: "Machine à café Nespresso",
-        description: "Machine à café Nespresso, avec capsules incluses.",
-        address: "Nantes",
-        price: 90,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        title: "Parasol de jardin",
-        description: "Parasol de jardin avec base, idéal pour l'été.",
-        address: "Nantes",
-        price: 40,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        title: "Tente de camping 4 personnes",
-        description:
-            "Tente de camping, facile à monter, idéale pour les vacances.",
+            "Studio à vendre à Rennes, idéal pour investissement locatif.",
         address: "Rennes",
-        price: 60,
+        price: 150000,
         createdAt: new Date(),
         updatedAt: new Date(),
     },
     {
-        title: "Télévision LED 50 pouces",
+        title: "Location villa avec piscine",
         description:
-            "Télévision LED 50 pouces, en excellent état, avec télécommande.",
-        address: "Rennes",
-        price: 400,
+            "Belle villa avec piscine à louer à Antibes, proche des plages.",
+        address: "Antibes",
+        price: 2000,
         createdAt: new Date(),
         updatedAt: new Date(),
     },
+    {
+        title: "Vente appartement 4 pièces",
+        description:
+            "Appartement 4 pièces en excellent état à Montpellier, avec balcon.",
+        address: "Montpellier",
+        price: 300000,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    },
+    {
+        title: "Colocation à Nice",
+        description:
+            "Chambre à louer dans une colocation à Nice, proche de la mer.",
+        address: "Nice",
+        price: 450,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    },
+    {
+        title: "Vente maison avec jardin",
+        description:
+            "Maison de 5 pièces avec jardin à Lyon, idéale pour famille.",
+        address: "Lyon",
+        price: 400000,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    },
+    {
+        title: "Location appartement 1 pièce",
+        description:
+            "Appartement 1 pièce à louer à Marseille, proche des transports.",
+        address: "Marseille",
+        price: 650,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    },
+    {
+        title: "Vente d'un immeuble",
+        description:
+            "Immeuble à vendre à Paris, plusieurs appartements disponibles.",
+        address: "Paris",
+        price: 1500000,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    },
+    {
+        title: "Location de loft",
+        description: "Loft moderne à louer à Strasbourg, spacieux et lumineux.",
+        address: "Strasbourg",
+        price: 1200,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    },
+    {
+        title: "Vente d'une maison de campagne",
+        description:
+            "Charmante maison de campagne à vendre à Bordeaux, calme et paisible.",
+        address: "Bordeaux",
+        price: 250000,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    },
+    // Ajout de 182 nouvelles annonces
+    ...Array.from({ length: 182 }, (_, i) => ({
+        title: `Annonce ${i + 1}`,
+        description: `Description de l'annonce ${i + 1}.`,
+        address: `Ville ${i + 1}`,
+        price: Math.floor(Math.random() * 1000000),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    })),
 ];

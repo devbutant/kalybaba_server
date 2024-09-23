@@ -1,42 +1,42 @@
 export const types = [
     {
-        where: { name: "echange" },
+        where: { name: "maison" },
         update: {},
         create: {
-            name: "echange",
-            description: "transaction d'un bien contre un autre",
+            name: "maison",
+            description: "propriété de type maison",
         },
     },
     {
-        where: { name: "location" },
+        where: { name: "appartement" },
         update: {},
         create: {
-            name: "location",
-            description: "transaction d'un bien contre une somme d'argent",
+            name: "appartement",
+            description: "propriété de type appartement",
         },
     },
     {
-        where: { name: "service" },
+        where: { name: "terrain" },
         update: {},
         create: {
-            name: "service",
-            description: "transaction d'un service contre une somme d'argent",
+            name: "terrain",
+            description: "terrain à vendre ou à louer",
         },
     },
     {
-        where: { name: "prêt" },
+        where: { name: "parking" },
         update: {},
         create: {
-            name: "prêt",
-            description: "transaction d'un bien prêté gratuitement",
+            name: "parking",
+            description: "place de parking ou garage",
         },
     },
     {
-        where: { name: "achat" },
+        where: { name: "autre" },
         update: {},
         create: {
-            name: "achat",
-            description: "transaction d'un bien contre une somme d'argent",
+            name: "autre",
+            description: "autre type de bien immobilier",
         },
     },
 ];
