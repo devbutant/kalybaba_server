@@ -27,6 +27,9 @@ export class AdService implements AdServiceInterface {
                 category: true,
                 author: true,
             },
+            orderBy: {
+                createdAt: "desc",
+            },
         });
     }
 
@@ -37,6 +40,9 @@ export class AdService implements AdServiceInterface {
                 type: true,
                 category: true,
                 author: true,
+            },
+            orderBy: {
+                createdAt: "desc",
             },
         });
     }
