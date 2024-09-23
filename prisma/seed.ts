@@ -1,36 +1,11 @@
-import { fakerFR as faker } from "@faker-js/faker";
 import { PrismaClient, User } from "@prisma/client";
+import { ads } from "../seed/ads";
 import { categories } from "../seed/categories";
 import { types } from "../seed/types";
 import { users } from "../seed/users";
 import { hashPassword } from "../seed/utils";
 
 const prisma = new PrismaClient();
-
-function createRandomAd() {
-    const typesArray = ["maison", "appartement", "terrain", "parking", "autre"];
-    const categoriesArray = [
-        "location",
-        "colocation",
-        "vente",
-        "bureaux / commerce",
-        "services de déménagement",
-    ];
-
-    return {
-        title: faker.lorem.sentence(),
-        description: faker.lorem.paragraph(),
-        address: faker.location.city(),
-        price: faker.number.int({ min: 100, max: 1000000 }),
-        type: typesArray[Math.floor(Math.random() * typesArray.length)],
-        category:
-            categoriesArray[Math.floor(Math.random() * categoriesArray.length)],
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    };
-}
-
-const ads = Array.from({ length: 200 }, createRandomAd);
 
 async function main() {
     for (const type of types) {
@@ -95,19 +70,23 @@ async function main() {
                 },
             });
 
-            await prisma.ad.create({
-                data: {
-                    title: ad.title,
-                    description: ad.description,
-                    address: ad.address,
-                    price: ad.price,
-                    authorId: newUser.id,
-                    typeId: typeIdCreated.id,
-                    categoryId: categoryIdCreated.id,
-                    createdAt: ad.createdAt,
-                    updatedAt: ad.updatedAt,
-                },
-            });
+            if (typeIdCreated && categoryIdCreated) {
+                await prisma.ad.create({
+                    data: {
+                        title: ad.title,
+                        description: ad.description,
+                        address: ad.address,
+                        price: ad.price,
+                        authorId: newUser.id,
+                        typeId: typeIdCreated.id,
+                        categoryId: categoryIdCreated.id,
+                        createdAt: ad.createdAt,
+                        updatedAt: ad.updatedAt,
+                    },
+                });
+            } else {
+                console.error(`Type or Category not found for ad: ${ad.title}`);
+            }
         }
 
         if (leftoverAds > 0) {
