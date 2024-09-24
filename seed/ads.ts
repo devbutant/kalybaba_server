@@ -1,171 +1,223 @@
-export const ads = [
+const ads = [
     {
-        title: "Location appartement 2 pièces",
+        title: "Vélo tout terrain en bon état",
         description:
-            "Appartement 2 pièces à louer à Bordeaux, bien situé près du centre-ville.",
-        address: "Bordeaux",
-        price: 800,
+            "Vélo VTT, peu utilisé, en très bon état, idéal pour randonnées.",
+        city: "123 Rue du Sport, Paris",
+        price: 120.0,
+        typeEnum: "OFFER", // Offre
+        categoryEnum: "VEHICLE", // Véhicule
         createdAt: new Date(),
         updatedAt: new Date(),
     },
     {
-        title: "Vente maison familiale",
+        title: "Demande de service de plomberie",
         description:
-            "Maison familiale spacieuse avec jardin à Toulouse, proche des écoles.",
-        address: "Toulouse",
-        price: 350000,
+            "Recherche un plombier pour une intervention rapide sur une fuite d'eau.",
+        city: "10 Rue des Fontaines, Lyon",
+        price: 0.0, // Prix nul pour une demande de service
+        typeEnum: "DEMAND", // Demande
+        categoryEnum: "SERVICES", // Services
         createdAt: new Date(),
         updatedAt: new Date(),
     },
     {
-        title: "Colocation dans un appartement moderne",
+        title: "Appartement T2 à louer",
         description:
-            "Chambre disponible en colocation dans un appartement moderne à Lyon.",
-        address: "Lyon",
-        price: 400,
+            "Appartement 2 pièces, 50m², proche du centre-ville et des commerces.",
+        city: "56 Avenue de la République, Marseille",
+        price: 650.0,
+        typeEnum: "OFFER", // Offre
+        categoryEnum: "REAL_ESTATE", // Immobilier
         createdAt: new Date(),
         updatedAt: new Date(),
     },
     {
-        title: "Vente de terrain constructible",
+        title: "Recherche jeux vidéo d'occasion",
         description:
-            "Terrain constructible de 600 m² à vendre près de Nice, idéal pour projet immobilier.",
-        address: "Nice",
-        price: 150000,
+            "Je suis à la recherche de jeux vidéo d'occasion pour PS4 et Nintendo Switch.",
+        city: "8 Rue du Gamer, Toulouse",
+        price: 0.0, // Prix nul pour une demande de biens
+        typeEnum: "DEMAND", // Demande
+        categoryEnum: "MULTIMEDIA", // Multimédia
         createdAt: new Date(),
         updatedAt: new Date(),
     },
     {
-        title: "Location studio meublé",
+        title: "Offre de baby-sitting",
         description:
-            "Studio meublé à louer à Strasbourg, idéal pour étudiants ou jeunes professionnels.",
-        address: "Strasbourg",
-        price: 600,
+            "Disponible pour garder vos enfants en soirée ou le week-end. Expérience vérifiable.",
+        city: "23 Rue des Enfants, Nantes",
+        price: 10.0, // Prix horaire pour le service
+        typeEnum: "OFFER", // Offre
+        categoryEnum: "SERVICES", // Services
         createdAt: new Date(),
         updatedAt: new Date(),
     },
     {
-        title: "Vente d'un appartement avec vue mer",
+        title: "Location de maison de vacances",
         description:
-            "Appartement de 3 pièces avec vue sur la mer à Marseille, récemment rénové.",
-        address: "Marseille",
-        price: 280000,
+            "Maison de vacances spacieuse, 3 chambres, à 5 minutes de la plage. Idéal pour famille.",
+        city: "9 Avenue du Soleil, Nice",
+        price: 1200.0,
+        typeEnum: "OFFER", // Offre
+        categoryEnum: "REAL_ESTATE", // Immobilier
         createdAt: new Date(),
         updatedAt: new Date(),
     },
     {
-        title: "Location de bureaux à Paris",
+        title: "Vente d'un ordinateur portable",
         description:
-            "Bureaux à louer dans le quartier des affaires de Paris, espace moderne et lumineux.",
-        address: "Paris",
-        price: 2500,
+            "Ordinateur portable en très bon état, parfait pour le travail ou le jeu.",
+        city: "77 Rue des Technologies, Bordeaux",
+        price: 500.0,
+        typeEnum: "OFFER", // Offre
+        categoryEnum: "MULTIMEDIA", // Multimédia
         createdAt: new Date(),
         updatedAt: new Date(),
     },
     {
-        title: "Vente d'un duplex à Lille",
+        title: "Demande de service de jardinage",
         description:
-            "Duplex de 4 pièces en plein cœur de Lille, avec balcon et garage.",
-        address: "Lille",
-        price: 320000,
+            "Recherche un jardinier pour entretenir mon jardin une fois par semaine.",
+        city: "3 Rue des Fleurs, Lille",
+        price: 0.0, // Prix nul pour une demande de service
+        typeEnum: "DEMAND", // Demande
+        categoryEnum: "SERVICES", // Services
         createdAt: new Date(),
         updatedAt: new Date(),
     },
     {
-        title: "Location d'un garage",
-        description: "Garage à louer à Nantes, sécurisé et facile d'accès.",
-        address: "Nantes",
-        price: 100,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        title: "Vente d'un studio",
+        title: "Voiture d'occasion à vendre",
         description:
-            "Studio à vendre à Rennes, idéal pour investissement locatif.",
-        address: "Rennes",
-        price: 150000,
+            "Peugeot 208 d'occasion, année 2018, faible kilométrage, en bon état.",
+        city: "11 Rue de l'Automobile, Rennes",
+        price: 7500.0,
+        typeEnum: "OFFER", // Offre
+        categoryEnum: "VEHICLE", // Véhicule
         createdAt: new Date(),
         updatedAt: new Date(),
     },
     {
-        title: "Location villa avec piscine",
+        title: "Recherche une assistante administrative",
         description:
-            "Belle villa avec piscine à louer à Antibes, proche des plages.",
-        address: "Antibes",
-        price: 2000,
+            "Entreprise recherche une assistante administrative pour un poste à mi-temps.",
+        city: "35 Rue des Entreprises, Strasbourg",
+        price: 0.0, // Prix nul pour une demande de service
+        typeEnum: "DEMAND", // Demande
+        categoryEnum: "EMPLOYMENT", // Emploi
         createdAt: new Date(),
         updatedAt: new Date(),
     },
     {
-        title: "Vente appartement 4 pièces",
+        title: "Cours de guitare pour débutants",
         description:
-            "Appartement 4 pièces en excellent état à Montpellier, avec balcon.",
-        address: "Montpellier",
-        price: 300000,
+            "Donne cours de guitare pour débutants. Possibilité à domicile ou en ligne.",
+        city: "45 Rue des Artistes, Paris",
+        price: 25.0, // Prix par session
+        typeEnum: "OFFER", // Offre
+        categoryEnum: "SERVICES", // Services
         createdAt: new Date(),
         updatedAt: new Date(),
     },
     {
-        title: "Colocation à Nice",
+        title: "Achat de meubles anciens",
         description:
-            "Chambre à louer dans une colocation à Nice, proche de la mer.",
-        address: "Nice",
-        price: 450,
+            "Cherche à acheter des meubles anciens en bois pour rénovation.",
+        city: "12 Rue des Antiquaires, Lille",
+        price: 0.0, // Demande sans prix
+        typeEnum: "DEMAND", // Demande
+        categoryEnum: "HOME", // Maison
         createdAt: new Date(),
         updatedAt: new Date(),
     },
     {
-        title: "Vente maison avec jardin",
+        title: "Chiot labrador à vendre",
         description:
-            "Maison de 5 pièces avec jardin à Lyon, idéale pour famille.",
-        address: "Lyon",
-        price: 400000,
+            "Chiot labrador de 3 mois, vacciné et en bonne santé, cherche famille aimante.",
+        city: "28 Rue des Animaux, Lyon",
+        price: 600.0,
+        typeEnum: "OFFER", // Offre
+        categoryEnum: "ANIMALS", // Animaux
         createdAt: new Date(),
         updatedAt: new Date(),
     },
     {
-        title: "Location appartement 1 pièce",
+        title: "Demande d'emploi en marketing digital",
         description:
-            "Appartement 1 pièce à louer à Marseille, proche des transports.",
-        address: "Marseille",
-        price: 650,
+            "Cherche un poste en marketing digital, expérience de 2 ans dans le secteur.",
+        city: "99 Avenue du Progrès, Bordeaux",
+        price: 0.0, // Demande sans prix
+        typeEnum: "DEMAND", // Demande
+        categoryEnum: "EMPLOYMENT", // Emploi
         createdAt: new Date(),
         updatedAt: new Date(),
     },
     {
-        title: "Vente d'un immeuble",
+        title: "Vente de livres d'occasion",
         description:
-            "Immeuble à vendre à Paris, plusieurs appartements disponibles.",
-        address: "Paris",
-        price: 1500000,
+            "Lot de livres d'occasion en très bon état, genres variés (romans, essais).",
+        city: "14 Rue de la Littérature, Toulouse",
+        price: 30.0, // Prix pour le lot
+        typeEnum: "OFFER", // Offre
+        categoryEnum: "LEISURE", // Loisirs
         createdAt: new Date(),
         updatedAt: new Date(),
     },
     {
-        title: "Location de loft",
-        description: "Loft moderne à louer à Strasbourg, spacieux et lumineux.",
-        address: "Strasbourg",
-        price: 1200,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        title: "Vente d'une maison de campagne",
+        title: "Demande de réparation d'ordinateur",
         description:
-            "Charmante maison de campagne à vendre à Bordeaux, calme et paisible.",
-        address: "Bordeaux",
-        price: 250000,
+            "Cherche technicien pour réparer un ordinateur portable Lenovo. Écran cassé.",
+        city: "7 Rue des Techniciens, Marseille",
+        price: 0.0, // Prix non précisé pour une demande
+        typeEnum: "DEMAND", // Demande
+        categoryEnum: "SERVICES", // Services
         createdAt: new Date(),
         updatedAt: new Date(),
     },
-    // Ajout de 182 nouvelles annonces
-    ...Array.from({ length: 182 }, (_, i) => ({
-        title: `Annonce ${i + 1}`,
-        description: `Description de l'annonce ${i + 1}.`,
-        address: `Ville ${i + 1}`,
-        price: Math.floor(Math.random() * 1000000),
+    {
+        title: "Location d'un camion de déménagement",
+        description:
+            "Camion de déménagement disponible à la location, permis B suffisant.",
+        city: "45 Rue des Déménageurs, Nice",
+        price: 80.0, // Prix par jour
+        typeEnum: "OFFER", // Offre
+        categoryEnum: "VEHICLE", // Véhicule
         createdAt: new Date(),
         updatedAt: new Date(),
-    })),
+    },
+    {
+        title: "Recherche stage en développement web",
+        description:
+            "Étudiant en développement web, recherche un stage de 3 mois.",
+        city: "67 Rue des Apprentis, Nantes",
+        price: 0.0, // Demande sans prix
+        typeEnum: "DEMAND", // Demande
+        categoryEnum: "EMPLOYMENT", // Emploi
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    },
+    {
+        title: "Location de matériel de camping",
+        description:
+            "Matériel de camping complet à louer : tente, sacs de couchage, réchaud.",
+        city: "89 Rue de l'Aventure, Montpellier",
+        price: 50.0, // Prix pour la location
+        typeEnum: "OFFER", // Offre
+        categoryEnum: "LEISURE", // Loisirs
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    },
+    {
+        title: "Don de vêtements pour bébé",
+        description: "Donne vêtements pour bébé, taille 0-6 mois. En bon état.",
+        city: "31 Rue des Familles, Rennes",
+        price: 0.0, // Don
+        typeEnum: "OFFER", // Offre
+        categoryEnum: "FASHION", // Mode
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    },
 ];
+
+export { ads };

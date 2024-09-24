@@ -12,19 +12,12 @@ export class AdService implements AdServiceInterface {
     async createAd(createAdDto: CreateAdDto) {
         return this.prisma.ad.create({
             data: createAdDto as Prisma.AdCreateInput,
-            include: {
-                type: true,
-                category: true,
-                author: true,
-            },
         });
     }
 
     async ads(): Promise<Ad[]> {
         return this.prisma.ad.findMany({
             include: {
-                type: true,
-                category: true,
                 author: true,
             },
             orderBy: {
@@ -37,8 +30,6 @@ export class AdService implements AdServiceInterface {
         return this.prisma.ad.findMany({
             where: { authorId: id },
             include: {
-                type: true,
-                category: true,
                 author: true,
             },
             orderBy: {
@@ -51,8 +42,6 @@ export class AdService implements AdServiceInterface {
         return this.prisma.ad.findUnique({
             where: { id: id },
             include: {
-                type: true,
-                category: true,
                 author: true,
             },
         });
@@ -62,8 +51,7 @@ export class AdService implements AdServiceInterface {
         return this.prisma.ad.update({
             where: { id: id },
             include: {
-                type: true,
-                category: true,
+                author: true,
             },
             data: updateAdDto as Prisma.AdUpdateInput,
         });
@@ -73,8 +61,7 @@ export class AdService implements AdServiceInterface {
         return this.prisma.ad.delete({
             where: { id: id },
             include: {
-                type: true,
-                category: true,
+                author: true,
             },
         });
     }

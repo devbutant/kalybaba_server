@@ -1,0 +1,9 @@
+-- CreateEnum
+CREATE TYPE "TypeEnum" AS ENUM ('OFFER', 'DEMAND');
+
+-- CreateEnum
+CREATE TYPE "CategoryEnum" AS ENUM ('VEHICLE', 'REAL_ESTATE', 'MULTIMEDIA', 'HOME', 'LEISURE', 'FASHION', 'CHILDREN', 'ANIMALS', 'SERVICES', 'EMPLOYMENT', 'OTHERS');
+
+-- AlterTable
+ALTER TABLE "Ad" ADD COLUMN     "categoryEnum" "CategoryEnum" NOT NULL DEFAULT 'OTHERS',
+ADD COLUMN     "typeEnum" "TypeEnum" NOT NULL DEFAULT 'DEMAND';
