@@ -1,11 +1,13 @@
 import {
     IsDate,
+    IsEnum,
     IsNumber,
     IsString,
     MaxLength,
     MinLength,
 } from "class-validator";
 
+import { CategoryEnum, TypeEnum } from "@prisma/client";
 import { IsCuid } from "../../../src/decorators/IsCUID";
 
 export class CreateAdDto {
@@ -22,7 +24,7 @@ export class CreateAdDto {
     @IsString()
     @MinLength(2)
     @MaxLength(100)
-    address: string;
+    city: string;
 
     @IsNumber()
     price: number;
@@ -31,13 +33,11 @@ export class CreateAdDto {
     authorId: string;
     author: { connect: { id: string } };
 
-    @IsCuid()
-    categoryId: string;
-    category: { connect: { id: string } };
+    @IsEnum(TypeEnum)
+    typeEnum: TypeEnum;
 
-    @IsCuid()
-    typeId: string;
-    type: { connect: { id: string } };
+    @IsEnum(CategoryEnum)
+    categoryEnum: CategoryEnum;
 
     @IsDate()
     createdAt: Date = new Date(); // Valeur par défaut : Date actuelle

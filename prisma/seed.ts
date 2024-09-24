@@ -1,37 +1,14 @@
-import { PrismaClient, User } from "@prisma/client";
-import { ads } from "../seed/ads";
-import { categories } from "../seed/categories";
-import { types } from "../seed/types";
+import { CategoryEnum, PrismaClient, TypeEnum, User } from "@prisma/client";
+import { ads } from "../seed/ads"; // Inclut les nouvelles annonces
 import { users } from "../seed/users";
 import { hashPassword } from "../seed/utils";
 
 const prisma = new PrismaClient();
 
 async function main() {
-    for (const type of types) {
-        await prisma.type.upsert({
-            where: { name: type.where.name },
-            update: {},
-            create: {
-                name: type.create.name,
-                description: type.create.description,
-            },
-        });
-    }
-
-    for (const category of categories) {
-        await prisma.category.upsert({
-            where: { name: category.where.name },
-            update: {},
-            create: {
-                name: category.create.name,
-                description: category.create.description,
-            },
-        });
-    }
-
     const createdUsers: User[] = [];
 
+    // Calculer combien d'annonces par utilisateur
     const adsPerUser = Math.floor(ads.length / users.length);
     let leftoverAds = ads.length % users.length;
 
@@ -45,7 +22,7 @@ async function main() {
                 email: user.create.email,
                 name: user.create.name,
                 password: hashedPassword,
-                address: user.create.address,
+                city: user.create.city,
                 phone: user.create.phone,
                 createdAt: new Date(),
                 updatedAt: new Date(),
@@ -54,38 +31,37 @@ async function main() {
 
         createdUsers.push(newUser);
 
+        // Calculer les annonces associées à cet utilisateur
         const startIndex = users.indexOf(user) * adsPerUser;
         const endIndex = startIndex + adsPerUser + (leftoverAds > 0 ? 1 : 0);
 
         for (const ad of ads.slice(startIndex, endIndex)) {
-            const typeIdCreated = await prisma.type.findUnique({
-                where: {
-                    name: ad.type,
-                },
-            });
+            try {
+                // Convertir les valeurs de typeEnum et categoryEnum en enums
+                const typeEnumValue =
+                    TypeEnum[ad.typeEnum as keyof typeof TypeEnum];
+                const categoryEnumValue =
+                    CategoryEnum[ad.categoryEnum as keyof typeof CategoryEnum];
 
-            const categoryIdCreated = await prisma.category.findUnique({
-                where: {
-                    name: ad.category,
-                },
-            });
-
-            if (typeIdCreated && categoryIdCreated) {
+                // Créer chaque annonce pour l'utilisateur
                 await prisma.ad.create({
                     data: {
                         title: ad.title,
                         description: ad.description,
-                        address: ad.address,
+                        city: ad.city,
                         price: ad.price,
                         authorId: newUser.id,
-                        typeId: typeIdCreated.id,
-                        categoryId: categoryIdCreated.id,
-                        createdAt: ad.createdAt,
-                        updatedAt: ad.updatedAt,
+                        typeEnum: typeEnumValue, // Utiliser la valeur enum
+                        categoryEnum: categoryEnumValue, // Utiliser la valeur enum
+                        createdAt: ad.createdAt || new Date(),
+                        updatedAt: ad.updatedAt || new Date(),
                     },
                 });
-            } else {
-                console.error(`Type or Category not found for ad: ${ad.title}`);
+            } catch (error) {
+                console.error(
+                    `Erreur lors de la création de l'annonce: ${ad.title}`,
+                    error
+                );
             }
         }
 
@@ -94,9 +70,9 @@ async function main() {
         }
     }
 
+    // Associer des amis aux utilisateurs
     for (const user of createdUsers) {
         const potentialFriends = createdUsers.filter((u) => u.id !== user.id);
-
         const numFriends = Math.floor(Math.random() * 4);
 
         const shuffledFriends = potentialFriends.sort(
