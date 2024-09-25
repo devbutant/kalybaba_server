@@ -29,7 +29,7 @@ export class CreateAdDto {
     @IsNumber()
     price: number;
 
-    @IsCuid()
+    @IsCuid() // Ce décorateur ne sert peut-être à rien ici (vérifie si c'est un CUID ou pas, à voir)
     authorId: string;
     author: { connect: { id: string } };
 
