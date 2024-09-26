@@ -11,7 +11,7 @@ import { UserService } from "../user/user.service";
 
 @WebSocketGateway({
     cors: {
-        origin: "*",
+        origin: process.env.CLIENT_URL,
         methods: ["GET", "POST"],
     },
 })
