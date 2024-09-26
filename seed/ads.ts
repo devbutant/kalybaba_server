@@ -3,7 +3,7 @@ const ads = [
         title: "Vélo tout terrain en bon état",
         description:
             "Vélo VTT, peu utilisé, en très bon état, idéal pour randonnées.",
-        city: "Paris",
+        city: "Toulon",
         price: 120,
         typeEnum: "OFFER",
         categoryEnum: "VEHICLE",
