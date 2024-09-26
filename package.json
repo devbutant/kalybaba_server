@@ -23,7 +23,7 @@
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "test:e2e": "jest --config ./test/jest-e2e.json",
         "postinstall": "prisma generate",
-        "vercel-build": "pnpm prisma generate && pnpm prisma migrate deploy && pnpm nest build"
+        "vercel-build": "pnpm prisma generate && pnpm prisma migrate deploy && pnpm prisma db seed && pnpm nest build"
     },
     "dependencies": {
         "@faker-js/faker": "^9.0.1",
