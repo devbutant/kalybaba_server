@@ -11,20 +11,22 @@ import { CreateAdDto } from "./create-ad.dto";
 
 export class UpdateAdDto extends PartialType(CreateAdDto) {
     @IsString()
+    @MinLength(5)
+    @MaxLength(50)
     title: string;
 
     @IsString()
-    @MinLength(2)
+    @MinLength(20)
     @MaxLength(200)
     description?: string;
+
+    @IsNumber()
+    price: number;
 
     @IsString()
     @MinLength(2)
     @MaxLength(100)
     city: string;
-
-    @IsNumber()
-    price: number;
 
     @IsEnum(TypeEnum)
     typeEnum: TypeEnum;

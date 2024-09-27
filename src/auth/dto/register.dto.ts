@@ -6,6 +6,8 @@ import {
     MinLength,
 } from "class-validator";
 
+const min1numberAnd1SpecialRegex = /(?=.*\d)(?=.*[@$!%*?&])/;
+
 export class RegisterDto {
     @IsEmail()
     email: string;
@@ -15,12 +17,15 @@ export class RegisterDto {
 
     @MinLength(8)
     @MaxLength(20)
-    @Matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
-        {
-            message:
-                "Le mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial",
-        }
-    )
+    @IsString()
+    @Matches(min1numberAnd1SpecialRegex, {
+        message:
+            "Password must contain at least one number and one special character",
+    })
     password: string;
+
+    @IsString()
+    @MinLength(2)
+    @MaxLength(30)
+    city: string;
 }

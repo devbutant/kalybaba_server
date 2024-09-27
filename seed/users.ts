@@ -31,7 +31,7 @@ export const users = [
         create: {
             email: "admin1@example.com",
             name: "Mymi",
-            password: "admin",
+            password: "admin123*",
             city: "Grenoble",
             phone: "0600000001",
             createdAt: new Date(),
@@ -44,7 +44,7 @@ export const users = [
         create: {
             email: "admin2@example.com",
             name: "Boubou",
-            password: "admin",
+            password: "admin123*",
             city: "New York",
             phone: "0600000001",
             createdAt: new Date(),
