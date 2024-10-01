@@ -53,4 +53,8 @@ export class AuthService implements AuthServiceInterface {
             data: userRegisterData as Prisma.UserCreateInput,
         });
     }
+
+    async tokenValidate() {
+        return { message: "Token is valid" };
+    }
 }
