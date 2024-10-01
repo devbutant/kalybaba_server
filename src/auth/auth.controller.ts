@@ -8,10 +8,11 @@ import {
     ValidationPipe,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { LocalAuthGuard } from "../auth/local-auth.guard";
 import { AuthService } from "./auth.service";
 import { RegisterDto } from "./dto/register.dto";
+import { JwtAuthGuard } from "./jwt-auth.guard";
 
 @ApiTags("authentication")
 @Controller("auth")
@@ -31,5 +32,12 @@ export class AuthController {
     @Post("register")
     register(@Body() userRegisterDto: RegisterDto) {
         return this.authService.register(userRegisterDto);
+    }
+
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
+    @Post("token-validate")
+    async tokenValidate() {
+        return this.authService.tokenValidate();
     }
 }
