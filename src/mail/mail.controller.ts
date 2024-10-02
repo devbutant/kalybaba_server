@@ -6,8 +6,8 @@ export class MailController {
     constructor(private readonly mailService: MailService) {}
 
     @Get()
-    sendEmail(): string {
-        this.mailService.sendEmail();
+    async sendEmail(userEmail: string): Promise<string> {
+        await this.mailService.sendEmail(userEmail);
         return "Mail sent!";
     }
 }
