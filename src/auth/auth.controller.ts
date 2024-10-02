@@ -31,10 +31,18 @@ export class AuthController {
         return this.authService.login(req.user);
     }
 
+    @Post("pre-register")
+    async preRegister(@Body() userRegisterDto: RegisterDto) {
+        await this.mailService.sendEmail(userRegisterDto.email);
+        return {
+            message: `Email sent to ${userRegisterDto.email}`,
+            user: userRegisterDto.name,
+        };
+    }
+
     @Post("register")
     async register(@Body() userRegisterDto: RegisterDto) {
         const user = await this.authService.register(userRegisterDto);
-        await this.mailService.sendEmail(user.email); // Send welcome email
         return user;
     }
 

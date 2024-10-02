@@ -1,7 +1,9 @@
 import { MailerModule } from "@nestjs-modules/mailer";
+import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
 import { Module } from "@nestjs/common";
-import { MailController } from './mail.controller';
-import { MailService } from './mail.service';
+import { JwtService } from "@nestjs/jwt";
+import { MailController } from "./mail.controller";
+import { MailService } from "./mail.service";
 
 @Module({
     imports: [
@@ -19,10 +21,18 @@ import { MailService } from './mail.service';
             defaults: {
                 from: "noreply@kalybaba.com",
             },
+            preview: true,
+            template: {
+                dir: process.cwd() + "/src/mail/templates",
+                adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
+                options: {
+                    strict: true,
+                },
+            },
         }),
     ],
     controllers: [MailController],
-    providers: [MailService],
+    providers: [MailService, JwtService],
     exports: [],
 })
 export class MailModule {}
