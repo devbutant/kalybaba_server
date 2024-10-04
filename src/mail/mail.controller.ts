@@ -1,14 +1,10 @@
 import { Controller, Get } from "@nestjs/common";
 import { PreRegisterDto } from "src/auth/dto/register.dto";
-import { PrismaService } from "../prisma.service";
 import { MailService } from "./mail.service";
 
 @Controller("mail")
 export class MailController {
-    constructor(
-        private readonly mailService: MailService,
-        private prisma: PrismaService
-    ) {}
+    constructor(private readonly mailService: MailService) {}
 
     @Get()
     async sendEmail(userRegisterData: PreRegisterDto): Promise<string> {
