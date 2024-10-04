@@ -9,10 +9,12 @@ import {
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { Prisma } from "@prisma/client";
 import { MailService } from "src/mail/mail.service";
 import { LocalAuthGuard } from "../auth/local-auth.guard";
+import { PrismaService } from "../prisma.service";
 import { AuthService } from "./auth.service";
-import { RegisterDto } from "./dto/register.dto";
+import { PreRegisterDto, RegisterDto } from "./dto/register.dto";
 import { JwtAuthGuard } from "./jwt-auth.guard";
 
 @ApiTags("authentication")
@@ -21,7 +23,8 @@ export class AuthController {
     constructor(
         private authService: AuthService,
         private mailService: MailService,
-        readonly configService: ConfigService
+        readonly configService: ConfigService,
+        private prisma: PrismaService
     ) {}
 
     @UseGuards(LocalAuthGuard)
@@ -32,11 +35,14 @@ export class AuthController {
     }
 
     @Post("pre-register")
-    async preRegister(@Body() userRegisterDto: RegisterDto) {
-        await this.mailService.sendEmail(userRegisterDto.email);
+    async preRegister(@Body() userRegisterDto: PreRegisterDto) {
+        // const preRegisterResponse =
+        //     await this.mailService.sendEmail(userRegisterDto);
+        const preRegisterResponse = await this.prisma.user.create({
+            data: userRegisterDto as Prisma.UserCreateInput,
+        });
         return {
-            message: `Email sent to ${userRegisterDto.email}`,
-            user: userRegisterDto.name,
+            preRegisterMessage: preRegisterResponse,
         };
     }
 

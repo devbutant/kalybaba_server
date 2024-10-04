@@ -1,6 +1,7 @@
 import { MailerService } from "@nestjs-modules/mailer";
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+import { PreRegisterDto } from "src/auth/dto/register.dto";
 
 @Injectable()
 export class MailService {
@@ -9,20 +10,20 @@ export class MailService {
         private readonly jwtService: JwtService
     ) {}
 
-    async sendEmail(userEmail: string): Promise<string> {
+    async sendEmail(userEmail: PreRegisterDto): Promise<string> {
         console.log("Sending mail to: ", userEmail);
 
         const token = this.jwtService.sign(
-            { email: userEmail },
+            { email: userEmail.email },
             {
-                expiresIn: "600s",
+                expiresIn: "600s", // 10 minutes
             }
         );
 
         const magicLink = `https://${process.env.CLIENT_URL}/confirmation-email?access-token=${token}`;
 
         await this.mailerService.sendMail({
-            to: userEmail,
+            to: userEmail.email,
             from: "noreply@kalybaba.com",
             subject: "Ton lien de confirmation ✔",
             template: "welcome",
@@ -31,7 +32,6 @@ export class MailService {
             },
         });
 
-        console.log("Mail sent to: ", userEmail);
-        return "Mail sent!";
+        return "Lien magic envoyé, tu as 10 minutes pour valider ton compte en cliquant dessus, sinon : recommence ton inscription!";
     }
 }

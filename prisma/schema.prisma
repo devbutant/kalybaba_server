@@ -10,9 +10,9 @@ datasource db {
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
-  name      String
-  password  String
-  city   String
+  name      String?
+  password  String?
+  city   String?
   phone     String?
   connected Boolean  @default(false)
   ads       Ad[]
