@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Prisma, User } from "@prisma/client";
+import { passwordHash } from "src/utilities/password.utility";
 import { PrismaService } from "../prisma.service";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { UserServiceInterface } from "./user.interface";
@@ -34,6 +35,10 @@ export class UserService implements UserServiceInterface {
     }
 
     async updateUser(id: string, updateUserData: UpdateUserDto): Promise<User> {
+        const initialPassword = updateUserData.password;
+        const hashedPassword = await passwordHash(initialPassword);
+        updateUserData.password = hashedPassword;
+
         return this.prisma.user.update({
             where: { id: id },
             include: {

@@ -29,3 +29,8 @@ export class RegisterDto {
     @MaxLength(30)
     city: string;
 }
+
+export class PreRegisterDto implements Pick<RegisterDto, "email"> {
+    @IsEmail()
+    email: string;
+}

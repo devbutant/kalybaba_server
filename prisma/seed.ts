@@ -24,6 +24,7 @@ async function main() {
                 password: hashedPassword,
                 city: user.create.city,
                 phone: user.create.phone,
+                role: "USER",
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },

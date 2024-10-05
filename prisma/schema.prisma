@@ -10,16 +10,17 @@ datasource db {
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
-  name      String
-  password  String
-  city   String
+  name      String?
+  password  String?
+  city   String?
   phone     String?
   connected Boolean  @default(false)
   ads       Ad[]
   friends   User[]   @relation("UserFriends")
   friendOf  User[]   @relation("UserFriends")
   rooms     Room[]   @relation("RoomUsers")
-  role      Role     @default(USER)
+  role      Role     @default(USER_PENDING)
+  emailVerificationToken String? @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -47,8 +48,9 @@ model Room {
 }
 
 enum Role {
+  USER_PRE_REGISTERED
+  USER_PENDING
   USER
-  ADMIN
 }
 
 enum TypeEnum {
