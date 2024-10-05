@@ -78,10 +78,15 @@ export class AuthService implements AuthServiceInterface {
             },
         });
 
-        if (user && user.status === "PENDING") {
+        // if (user && user.status === "PENDING") {
+        // TODO: gérer ave les rolees
+        if (user) {
             await this.prisma.user.update({
                 where: { id: user.id },
-                data: { emailVerificationToken: null, emailVerified: true },
+                data: {
+                    emailVerificationToken: null,
+                    role: "USER_PRE_REGISTERED",
+                },
             });
 
             return { valid: true, user };

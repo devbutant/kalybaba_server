@@ -19,12 +19,8 @@ model User {
   friends   User[]   @relation("UserFriends")
   friendOf  User[]   @relation("UserFriends")
   rooms     Room[]   @relation("RoomUsers")
-  role      Role     @default(USER)
-
-  status String @default("PENDING")
+  role      Role     @default(USER_PENDING)
   emailVerificationToken String? @unique
-  emailVerified       Boolean  @default(false) 
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -52,8 +48,9 @@ model Room {
 }
 
 enum Role {
+  USER_PRE_REGISTERED
+  USER_PENDING
   USER
-  ADMIN
 }
 
 enum TypeEnum {
