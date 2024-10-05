@@ -16,6 +16,35 @@ export class AuthService implements AuthServiceInterface {
         private prisma: PrismaService
     ) {}
 
+    async register(userRegisterData: RegisterDto): Promise<User> {
+        const initialPassword = userRegisterData.password;
+        const hashedPassword = await passwordHash(initialPassword);
+        userRegisterData.password = hashedPassword;
+
+        return this.prisma.user.create({
+            data: userRegisterData as Prisma.UserCreateInput,
+        });
+    }
+
+    async validateEmailToken(token: string) {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                emailVerificationToken: token,
+            },
+        });
+
+        if (user && user.status === "PENDING") {
+            await this.prisma.user.update({
+                where: { id: user.id },
+                data: { status: "ACTIVE", emailVerificationToken: null },
+            });
+
+            return { valid: true, user };
+        }
+
+        return { valid: false };
+    }
+
     async validateUser(loginDto: LoginDto): Promise<any> {
         const user = await this.userService.user({ email: loginDto.email });
 
@@ -31,8 +60,8 @@ export class AuthService implements AuthServiceInterface {
         if (!passwordIsValid) {
             throw new UnauthorizedException("Invalid credentials");
         }
-        const { password: userPassword, ...result } = user;
 
+        const { password: userPassword, ...result } = user;
         return result;
     }
 
@@ -42,16 +71,6 @@ export class AuthService implements AuthServiceInterface {
         return {
             access_token: await this.jwtService.signAsync(payload),
         };
-    }
-
-    async register(userRegisterData: RegisterDto): Promise<User> {
-        const initialPassword = userRegisterData.password;
-        const hashedPassword = await passwordHash(initialPassword);
-        userRegisterData.password = hashedPassword;
-
-        return this.prisma.user.create({
-            data: userRegisterData as Prisma.UserCreateInput,
-        });
     }
 
     async tokenValidate() {

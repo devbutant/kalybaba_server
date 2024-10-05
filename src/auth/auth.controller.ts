@@ -9,9 +9,9 @@ import {
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { Prisma } from "@prisma/client";
-import { MailService } from "src/mail/mail.service";
+import { randomUUID } from "crypto";
 import { LocalAuthGuard } from "../auth/local-auth.guard";
+import { MailService } from "../mail/mail.service";
 import { PrismaService } from "../prisma.service";
 import { AuthService } from "./auth.service";
 import { PreRegisterDto, RegisterDto } from "./dto/register.dto";
@@ -22,9 +22,9 @@ import { JwtAuthGuard } from "./jwt-auth.guard";
 export class AuthController {
     constructor(
         private authService: AuthService,
-        private mailService: MailService,
         readonly configService: ConfigService,
-        private prisma: PrismaService
+        private prisma: PrismaService,
+        private mailService: MailService
     ) {}
 
     @UseGuards(LocalAuthGuard)
@@ -35,14 +35,35 @@ export class AuthController {
     }
 
     @Post("pre-register")
-    async preRegister(@Body() userRegisterDto: PreRegisterDto) {
-        // const preRegisterResponse =
-        //     await this.mailService.sendEmail(userRegisterDto);
-        const preRegisterResponse = await this.prisma.user.create({
-            data: userRegisterDto as Prisma.UserCreateInput,
+    async preRegister(@Body() userRegisterInfos: PreRegisterDto) {
+        console.log(userRegisterInfos);
+
+        const existingUser = await this.prisma.user.findUnique({
+            where: { email: userRegisterInfos.email },
         });
+
+        console.log(existingUser);
+
+        if (existingUser) {
+            throw new Error("Cet email est déjà utilisé.");
+        }
+
+        const verificationToken = randomUUID();
+        const preRegisterResponse = await this.prisma.user.create({
+            data: {
+                ...userRegisterInfos,
+                emailVerificationToken: verificationToken,
+            },
+        });
+
+        const sendingMailStatus = await this.mailService.sendEmail(
+            userRegisterInfos,
+            verificationToken
+        );
+
         return {
-            preRegisterMessage: preRegisterResponse,
+            preRegisterResponse,
+            sendingMailStatus,
         };
     }
 
@@ -50,6 +71,24 @@ export class AuthController {
     async register(@Body() userRegisterDto: RegisterDto) {
         const user = await this.authService.register(userRegisterDto);
         return user;
+    }
+
+    @Post("confirm-email")
+    async confirmEmail(@Body() { token }: { token: string }) {
+        const { valid, user } =
+            await this.authService.validateEmailToken(token);
+
+        if (valid) {
+            const loginResponse = await this.authService.login(user);
+            return {
+                message: "Email confirmé avec succès et utilisateur connecté.",
+                ...loginResponse,
+            };
+        }
+
+        return {
+            message: "Le token est invalide ou l'email n'a pas pu être validé.",
+        };
     }
 
     @ApiBearerAuth()

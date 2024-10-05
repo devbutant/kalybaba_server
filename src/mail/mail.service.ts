@@ -1,26 +1,15 @@
 import { MailerService } from "@nestjs-modules/mailer";
 import { Injectable } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
 import { PreRegisterDto } from "src/auth/dto/register.dto";
 
 @Injectable()
 export class MailService {
-    constructor(
-        private readonly mailerService: MailerService,
-        private readonly jwtService: JwtService
-    ) {}
+    constructor(private readonly mailerService: MailerService) {}
 
-    async sendEmail(userEmail: PreRegisterDto): Promise<string> {
+    async sendEmail(userEmail: PreRegisterDto, token: string): Promise<string> {
         console.log("Sending mail to: ", userEmail);
 
-        const token = this.jwtService.sign(
-            { email: userEmail.email },
-            {
-                expiresIn: "600s", // 10 minutes
-            }
-        );
-
-        const magicLink = `https://${process.env.CLIENT_URL}/confirmation-email?access-token=${token}`;
+        const magicLink = `${process.env.CLIENT_URL}/confirmation-email/${token}`;
 
         await this.mailerService.sendMail({
             to: userEmail.email,

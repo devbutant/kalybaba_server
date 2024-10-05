@@ -20,7 +20,11 @@ model User {
   friendOf  User[]   @relation("UserFriends")
   rooms     Room[]   @relation("RoomUsers")
   role      Role     @default(USER)
+
   status String @default("PENDING")
+  emailVerificationToken String? @unique
+  emailVerified       Boolean  @default(false) 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
