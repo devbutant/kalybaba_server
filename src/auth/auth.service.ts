@@ -36,7 +36,8 @@ export class AuthService implements AuthServiceInterface {
         if (user && user.status === "PENDING") {
             await this.prisma.user.update({
                 where: { id: user.id },
-                data: { status: "ACTIVE", emailVerificationToken: null },
+                data: { emailVerificationToken: null, emailVerified: true },
+                // data: { status: "ACTIVE", emailVerificationToken: null },
             });
 
             return { valid: true, user };
