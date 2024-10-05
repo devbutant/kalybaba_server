@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import {
+    ForbiddenException,
+    Injectable,
+    UnauthorizedException,
+} from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { Prisma, User } from "@prisma/client";
 import { randomUUID } from "crypto";
@@ -29,46 +33,50 @@ export class AuthService implements AuthServiceInterface {
         });
     }
 
-    async completeTheProfile(
-        userRegisterData: PreRegisterDto
-    ): Promise<string> {
+    async sendVerificationEmail(
+        user: PreRegisterDto,
+        verificationToken: string
+    ) {
+        try {
+            await this.mailService.sendEmail(user, verificationToken);
+            console.log("Email envoyé");
+        } catch (error) {
+            console.error(
+                "Une erreur s'est produite lors de la tentative de l'envoie d'e-mail:",
+                error
+            );
+            throw new Error(
+                "Une erreur s'est produite lors de la tentative de l'envoie d'e-mail"
+            );
+        }
+    }
+
+    async completeTheProfile(userRegisterData: PreRegisterDto): Promise<void> {
         const existingUser = await this.prisma.user.findUnique({
             where: { email: userRegisterData.email },
         });
 
         const verificationToken = randomUUID();
-        let preRegisterResponse: User;
 
-        // TODO: faire fail si le user a un statut ACTIVE (ou role USER_CONFIRMED)
-
-        // TODO: LEs différents roles :
-        // PRE_REGISTERED
-        // REGISTERED
-        // ADMIN
-
-        // Il n'aura plus besoin de se pré enregistrer
         if (!existingUser) {
-            console.log("User doesn't exist, creating new user");
-            preRegisterResponse = await this.prisma.user.create({
+            await this.prisma.user.create({
                 data: {
                     ...userRegisterData,
                     emailVerificationToken: verificationToken,
                 },
             });
-        } else {
-            console.log("User already exists, updating token");
-            preRegisterResponse = await this.prisma.user.update({
+        } else if (existingUser && existingUser.role !== "USER") {
+            await this.prisma.user.update({
                 where: { email: userRegisterData.email },
                 data: { emailVerificationToken: verificationToken },
             });
+        } else if (existingUser && existingUser.role === "USER") {
+            throw new ForbiddenException(
+                "Un compte existe déjà avec cet email, veuillez vous connecter"
+            );
         }
 
-        const sendingMailStatus = await this.mailService.sendEmail(
-            userRegisterData,
-            verificationToken
-        );
-
-        return sendingMailStatus;
+        await this.sendVerificationEmail(userRegisterData, verificationToken);
     }
 
     async validateEmailToken(token: string) {
@@ -78,9 +86,7 @@ export class AuthService implements AuthServiceInterface {
             },
         });
 
-        // if (user && user.status === "PENDING") {
-        // TODO: gérer ave les rolees
-        if (user) {
+        if (user && user.role !== "USER") {
             await this.prisma.user.update({
                 where: { id: user.id },
                 data: {
