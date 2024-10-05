@@ -9,6 +9,7 @@ import {
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { User } from "@prisma/client";
 import { randomUUID } from "crypto";
 import { LocalAuthGuard } from "../auth/local-auth.guard";
 import { MailService } from "../mail/mail.service";
@@ -42,19 +43,28 @@ export class AuthController {
             where: { email: userRegisterInfos.email },
         });
 
-        console.log(existingUser);
-
-        if (existingUser) {
-            throw new Error("Cet email est déjà utilisé.");
-        }
-
         const verificationToken = randomUUID();
-        const preRegisterResponse = await this.prisma.user.create({
-            data: {
-                ...userRegisterInfos,
-                emailVerificationToken: verificationToken,
-            },
-        });
+        let preRegisterResponse: User;
+
+        if (!existingUser) {
+            console.log("User already exists, updating token");
+
+            preRegisterResponse = await this.prisma.user.create({
+                data: {
+                    ...userRegisterInfos,
+                    emailVerificationToken: verificationToken,
+                },
+            });
+        } else {
+            console.log("User doesn't exist, creating new user");
+
+            preRegisterResponse = await this.prisma.user.update({
+                where: { id: existingUser.id },
+                data: {
+                    emailVerificationToken: verificationToken,
+                },
+            });
+        }
 
         const sendingMailStatus = await this.mailService.sendEmail(
             userRegisterInfos,
