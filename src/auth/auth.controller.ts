@@ -9,8 +9,6 @@ import {
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { User } from "@prisma/client";
-import { randomUUID } from "crypto";
 import { LocalAuthGuard } from "../auth/local-auth.guard";
 import { MailService } from "../mail/mail.service";
 import { PrismaService } from "../prisma.service";
@@ -36,45 +34,8 @@ export class AuthController {
     }
 
     @Post("pre-register")
-    async preRegister(@Body() userRegisterInfos: PreRegisterDto) {
-        console.log(userRegisterInfos);
-
-        const existingUser = await this.prisma.user.findUnique({
-            where: { email: userRegisterInfos.email },
-        });
-
-        const verificationToken = randomUUID();
-        let preRegisterResponse: User;
-
-        if (!existingUser) {
-            console.log("User already exists, updating token");
-
-            preRegisterResponse = await this.prisma.user.create({
-                data: {
-                    ...userRegisterInfos,
-                    emailVerificationToken: verificationToken,
-                },
-            });
-        } else {
-            console.log("User doesn't exist, creating new user");
-
-            preRegisterResponse = await this.prisma.user.update({
-                where: { id: existingUser.id },
-                data: {
-                    emailVerificationToken: verificationToken,
-                },
-            });
-        }
-
-        const sendingMailStatus = await this.mailService.sendEmail(
-            userRegisterInfos,
-            verificationToken
-        );
-
-        return {
-            preRegisterResponse,
-            sendingMailStatus,
-        };
+    async preRegister(@Body() userRegisterData: PreRegisterDto) {
+        return this.authService.completeTheProfile(userRegisterData);
     }
 
     @Post("register")

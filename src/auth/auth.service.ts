@@ -1,19 +1,22 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { Prisma, User } from "@prisma/client";
+import { randomUUID } from "crypto";
+import { MailService } from "src/mail/mail.service";
 import { PrismaService } from "../prisma.service";
 import { UserService } from "../user/user.service";
 import { passwordCompare, passwordHash } from "../utilities/password.utility";
 import { AuthServiceInterface } from "./auth.interface";
 import { LoginDto } from "./dto/login.dto";
-import { RegisterDto } from "./dto/register.dto";
+import { PreRegisterDto, RegisterDto } from "./dto/register.dto";
 
 @Injectable()
 export class AuthService implements AuthServiceInterface {
     constructor(
         private userService: UserService,
         private jwtService: JwtService,
-        private prisma: PrismaService
+        private prisma: PrismaService,
+        private mailService: MailService
     ) {}
 
     async register(userRegisterData: RegisterDto): Promise<User> {
@@ -24,6 +27,48 @@ export class AuthService implements AuthServiceInterface {
         return this.prisma.user.create({
             data: userRegisterData as Prisma.UserCreateInput,
         });
+    }
+
+    async completeTheProfile(
+        userRegisterData: PreRegisterDto
+    ): Promise<string> {
+        const existingUser = await this.prisma.user.findUnique({
+            where: { email: userRegisterData.email },
+        });
+
+        const verificationToken = randomUUID();
+        let preRegisterResponse: User;
+
+        // TODO: faire fail si le user a un statut ACTIVE (ou role USER_CONFIRMED)
+
+        // TODO: LEs différents roles :
+        // PRE_REGISTERED
+        // REGISTERED
+        // ADMIN
+
+        // Il n'aura plus besoin de se pré enregistrer
+        if (!existingUser) {
+            console.log("User doesn't exist, creating new user");
+            preRegisterResponse = await this.prisma.user.create({
+                data: {
+                    ...userRegisterData,
+                    emailVerificationToken: verificationToken,
+                },
+            });
+        } else {
+            console.log("User already exists, updating token");
+            preRegisterResponse = await this.prisma.user.update({
+                where: { email: userRegisterData.email },
+                data: { emailVerificationToken: verificationToken },
+            });
+        }
+
+        const sendingMailStatus = await this.mailService.sendEmail(
+            userRegisterData,
+            verificationToken
+        );
+
+        return sendingMailStatus;
     }
 
     async validateEmailToken(token: string) {
@@ -37,7 +82,6 @@ export class AuthService implements AuthServiceInterface {
             await this.prisma.user.update({
                 where: { id: user.id },
                 data: { emailVerificationToken: null, emailVerified: true },
-                // data: { status: "ACTIVE", emailVerificationToken: null },
             });
 
             return { valid: true, user };
