@@ -10,8 +10,8 @@ import { MailService } from "./mail.service";
         MailerModule.forRoot({
             transport: {
                 host: "smtp.gmail.com",
-                port: 587,
-                secure: false,
+                port: process.env.NODE_ENV === "production" ? 465 : 587,
+                secure: process.env.NODE_ENV === "production",
                 from: "noreply@kalybaba.com",
                 auth: {
                     user: process.env.MAIL_USER,
