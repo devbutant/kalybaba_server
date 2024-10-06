@@ -10,8 +10,6 @@ import {
 import { ConfigService } from "@nestjs/config";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { LocalAuthGuard } from "../auth/local-auth.guard";
-import { MailService } from "../mail/mail.service";
-import { PrismaService } from "../prisma.service";
 import { AuthService } from "./auth.service";
 import { PreRegisterDto, RegisterDto } from "./dto/register.dto";
 import { JwtAuthGuard } from "./jwt-auth.guard";
@@ -21,9 +19,7 @@ import { JwtAuthGuard } from "./jwt-auth.guard";
 export class AuthController {
     constructor(
         private authService: AuthService,
-        readonly configService: ConfigService,
-        private prisma: PrismaService,
-        private mailService: MailService
+        readonly configService: ConfigService
     ) {}
 
     @UseGuards(LocalAuthGuard)

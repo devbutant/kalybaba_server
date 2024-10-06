@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
-import { MailService } from "src/mail/mail.service";
+import { MailModule } from "src/mail/mail.module";
 import { PrismaService } from "../prisma.service";
 import { UserModule } from "../user/user.module";
 import { AuthController } from "./auth.controller";
@@ -20,16 +20,11 @@ import { LocalStrategy } from "./local.strategy";
             secret: process.env.JWT_SECRET_PASSPHRASE,
             signOptions: { expiresIn: "6000s" },
         }),
+        MailModule,
     ],
 
     controllers: [AuthController],
-    providers: [
-        AuthService,
-        PrismaService,
-        LocalStrategy,
-        JwtStrategy,
-        MailService,
-    ],
+    providers: [AuthService, PrismaService, LocalStrategy, JwtStrategy],
     exports: [AuthService],
 })
 export class AuthModule {}

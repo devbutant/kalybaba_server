@@ -38,8 +38,11 @@ export class AuthService implements AuthServiceInterface {
         verificationToken: string
     ) {
         try {
-            await this.mailService.sendEmail(user, verificationToken);
-            console.log("Email envoyé");
+            const emailResponse = await this.mailService.sendEmail(
+                user,
+                verificationToken
+            );
+            console.log(emailResponse);
         } catch (error) {
             console.error(
                 "Une erreur s'est produite lors de la tentative de l'envoie d'e-mail:",
