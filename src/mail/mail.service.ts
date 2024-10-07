@@ -1,28 +1,29 @@
+import { MailerService } from "@nestjs-modules/mailer";
 import { Injectable } from "@nestjs/common";
-import { ResendService } from "nestjs-resend";
 import { PreRegisterDto } from "src/auth/dto/register.dto";
 
 @Injectable()
 export class MailService {
-    constructor(private readonly resendService: ResendService) {}
+    constructor(private readonly mailService: MailerService) {}
 
     public async sendEmail(user: PreRegisterDto, token: string): Promise<any> {
-        const sendingRes = await this.resendService.send({
-            from: "onboarding@resend.dev",
-            to: process.env.MAIL_USER, // TODO changer pour user.email
+        const sendingRes = await this.mailService.sendMail({
+            from: "no-reply@votre-domaine.com",
+            to: user.email, // TODO changer pour user.email
             subject: "Ton lien de confirmation ✔",
-            text:
+            html:
                 "Hello, world! Voici votre token: " +
                 token +
                 ". Cliquez sur ce lien pour confirmer votre email: http://localhost:5173/auth/confirmation-email/" +
                 token,
         });
 
-        if (sendingRes.error !== null) {
+        if (
+            sendingRes.accepted.includes(user.email) &&
+            sendingRes.rejected.length === 0
+        ) {
             return {
-                error: sendingRes.error
-                    ? sendingRes.error
-                    : "An unknown error occurred.",
+                message: `Email successfully sent to ${user.email} with the token: ${token}`,
             };
         }
 

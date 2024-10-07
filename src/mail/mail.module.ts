@@ -1,11 +1,14 @@
+import { MailerModule } from "@nestjs-modules/mailer";
 import { Module } from "@nestjs/common";
-import { ResendModule } from "nestjs-resend";
 import { MailService } from "./mail.service";
 
 @Module({
     imports: [
-        ResendModule.forRoot({
-            apiKey: process.env.RESEND_API_KEY,
+        MailerModule.forRoot({
+            transport: `smtps://${process.env.USER_EMAIL}:${process.env.PASSWORD_USER_EMAIL}@smtp.gmail.com`,
+            defaults: {
+                from: '"nest-modules" <modules@nestjs.com>',
+            },
         }),
     ],
     providers: [MailService],
