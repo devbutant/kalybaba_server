@@ -11,7 +11,11 @@ export class MailService {
             from: "onboarding@resend.dev",
             to: process.env.MAIL_USER, // TODO changer pour user.email
             subject: "Ton lien de confirmation ✔",
-            text: "Hello, world! Voici votre token: " + token,
+            text:
+                "Hello, world! Voici votre token: " +
+                token +
+                ". Cliquez sur ce lien pour confirmer votre email: http://localhost:5173/auth/confirmation-email/" +
+                token,
         });
 
         if (sendingRes.error !== null) {
