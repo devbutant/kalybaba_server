@@ -9,7 +9,7 @@ export class MailService {
     public async sendEmail(user: PreRegisterDto, token: string): Promise<any> {
         const sendingRes = await this.mailService.sendMail({
             from: "no-reply@votre-domaine.com",
-            to: user.email, // TODO changer pour user.email
+            to: user.email,
             subject: "Ton lien de confirmation ✔",
             html:
                 "Hello, world! Voici votre token: " +
