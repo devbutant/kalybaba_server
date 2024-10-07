@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
-import { MailModule } from "src/mail/mail.module";
-import { PrismaService } from "src/prisma/prisma.service";
 import { AdModule } from "../ad/ad.module";
+import { MailModule } from "../mail/mail.module";
+import { PrismaService } from "../prisma/prisma.service";
 import { UserModule } from "../user/user.module";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
