@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Ad, Prisma } from "@prisma/client";
-import { PrismaService } from "../prisma.service";
+import { PrismaService } from "../prisma/prisma.service";
 import { AdServiceInterface } from "./ad.interface";
 import { CreateAdDto } from "./dto/create-ad.dto";
 import { UpdateAdDto } from "./dto/update-ad.dto";

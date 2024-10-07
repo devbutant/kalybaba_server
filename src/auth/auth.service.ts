@@ -7,7 +7,7 @@ import { JwtService } from "@nestjs/jwt";
 import { Prisma, User } from "@prisma/client";
 import { randomUUID } from "crypto";
 import { MailService } from "src/mail/mail.service";
-import { PrismaService } from "../prisma.service";
+import { PrismaService } from "../prisma/prisma.service";
 import { UserService } from "../user/user.service";
 import { passwordCompare, passwordHash } from "../utilities/password.utility";
 import { AuthServiceInterface } from "./auth.interface";

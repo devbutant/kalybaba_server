@@ -7,7 +7,6 @@ import {
     UsePipes,
     ValidationPipe,
 } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { LocalAuthGuard } from "../auth/local-auth.guard";
 import { AuthService } from "./auth.service";
@@ -17,10 +16,7 @@ import { JwtAuthGuard } from "./jwt-auth.guard";
 @ApiTags("authentication")
 @Controller("auth")
 export class AuthController {
-    constructor(
-        private authService: AuthService,
-        readonly configService: ConfigService
-    ) {}
+    constructor(private authService: AuthService) {}
 
     @UseGuards(LocalAuthGuard)
     @UsePipes(new ValidationPipe())
