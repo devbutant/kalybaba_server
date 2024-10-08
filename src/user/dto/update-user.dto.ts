@@ -1,4 +1,4 @@
-import { Matches, MaxLength, MinLength } from "class-validator";
+import { IsOptional, Matches, MaxLength, MinLength } from "class-validator";
 import { CreateAdDto } from "src/ad/dto/create-ad.dto";
 
 import { IsString, ValidateNested } from "class-validator";
@@ -21,6 +21,7 @@ export class UpdateUserDto {
     @ValidateNested({ each: true })
     ads?: CreateAdDto[];
 
+    @IsOptional()
     @IsString()
     @MinLength(10)
     phone?: string;
