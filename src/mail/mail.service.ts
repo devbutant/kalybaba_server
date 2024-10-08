@@ -14,7 +14,7 @@ export class MailService {
             html:
                 "Hello, world! Voici votre token: " +
                 token +
-                `. Cliquez sur ce lien pour confirmer votre email: ${process.env.CLIENT_URL}/confirm-email/${token}`,
+                `. Cliquez sur ce lien pour confirmer votre email: ${process.env.CLIENT_URL}/confirmation-email/${token}`,
         });
 
         if (
