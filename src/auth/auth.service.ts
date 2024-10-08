@@ -94,7 +94,6 @@ export class AuthService implements AuthServiceInterface {
                 where: { id: user.id },
                 data: {
                     emailVerificationToken: null,
-                    role: "USER_PRE_REGISTERED",
                 },
             });
 
