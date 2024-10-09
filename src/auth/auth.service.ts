@@ -124,7 +124,7 @@ export class AuthService implements AuthServiceInterface {
     }
 
     async login(user: any): Promise<{ access_token: string }> {
-        const payload = { sub: user.email, id: user.id };
+        const payload = { sub: user.email, id: user.id, role: user.role };
 
         return {
             access_token: await this.jwtService.signAsync(payload),
