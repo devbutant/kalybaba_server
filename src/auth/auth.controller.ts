@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    Get,
     Post,
     Request,
     UseGuards,
@@ -59,5 +60,10 @@ export class AuthController {
     @Post("token-validate")
     async tokenValidate() {
         return this.authService.tokenValidate();
+    }
+
+    @Get("refresh-token")
+    async refreshToken(@Request() req) {
+        return this.authService.refreshToken(req.headers.authorization);
     }
 }

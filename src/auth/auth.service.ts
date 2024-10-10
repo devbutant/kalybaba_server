@@ -134,4 +134,23 @@ export class AuthService implements AuthServiceInterface {
     async tokenValidate() {
         return { message: "Token is valid" };
     }
+
+    async refreshToken(token: string) {
+        try {
+            const refreshToken = token.replace("Bearer ", "");
+
+            const payload = this.jwtService.verify(refreshToken, {
+                secret: process.env.JWT_REFRESH_SECRET,
+            });
+
+            const newAccessToken = this.jwtService.sign(
+                { userId: payload.userId, email: payload.email },
+                { secret: process.env.JWT_ACCESS_SECRET, expiresIn: "15m" }
+            );
+
+            return { accessToken: newAccessToken };
+        } catch (error) {
+            throw new UnauthorizedException("Invalid refresh token");
+        }
+    }
 }
