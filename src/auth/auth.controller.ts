@@ -4,11 +4,13 @@ import {
     Get,
     Post,
     Request,
+    Res,
     UseGuards,
     UsePipes,
     ValidationPipe,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { Response } from "express";
 import { LocalAuthGuard } from "../auth/local-auth.guard";
 import { AuthService } from "./auth.service";
 import { PreRegisterDto, RegisterDto } from "./dto/register.dto";
@@ -22,8 +24,17 @@ export class AuthController {
     @UseGuards(LocalAuthGuard)
     @UsePipes(new ValidationPipe())
     @Post("login")
-    async login(@Request() req) {
-        return this.authService.login(req.user);
+    async login(@Request() req, @Res({ passthrough: true }) res: Response) {
+        const { access_token } = await this.authService.login(req.user);
+
+        res.cookie("access_token", access_token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+            maxAge: 15 * 60 * 1000, // 15 minutes
+        });
+
+        return res.send({ message: "Login successful" });
     }
 
     @Post("pre-register")
@@ -63,7 +74,17 @@ export class AuthController {
     }
 
     @Get("refresh-token")
-    async refreshToken(@Request() req) {
-        return this.authService.refreshToken(req.headers.authorization);
+    async findAll(@Res({ passthrough: true }) response: Response) {
+        return "hey";
+    }
+
+    @ApiBearerAuth()
+    @Get("check")
+    @UseGuards(JwtAuthGuard)
+    async checkAuth(@Request() req) {
+        return {
+            isAuthenticated: true,
+            user: req.user,
+        };
     }
 }

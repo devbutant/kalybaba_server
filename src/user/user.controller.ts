@@ -29,11 +29,16 @@ export class UserController {
         try {
             const userEmail = req.user.userId;
 
+            console.log(userEmail);
+
             const updatedUser =
                 await this.userService.updateUserConnectionStatus(
                     userEmail,
                     connected
                 );
+
+            console.log(updatedUser);
+
             return updatedUser;
         } catch (error: unknown) {
             throw new Error(

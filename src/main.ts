@@ -1,6 +1,7 @@
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import * as cookieParser from "cookie-parser";
 import { AppModule } from "./app.module";
 
 async function bootstrap() {
@@ -11,6 +12,7 @@ async function bootstrap() {
         credentials: true,
     });
     app.useGlobalPipes(new ValidationPipe());
+    app.use(cookieParser());
 
     const config = new DocumentBuilder()
         .addBearerAuth()
