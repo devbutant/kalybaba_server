@@ -14,12 +14,6 @@ import { AuthServiceInterface } from "./auth.interface";
 import { LoginDto } from "./dto/login.dto";
 import { PreRegisterDto, RegisterDto } from "./dto/register.dto";
 
-type AuthenticatedUser = {
-    isAuthenticated: boolean;
-    id: string;
-    roles: string[] | null;
-};
-
 @Injectable()
 export class AuthService implements AuthServiceInterface {
     constructor(
@@ -129,9 +123,7 @@ export class AuthService implements AuthServiceInterface {
         return result;
     }
 
-    async login(
-        user: any
-    ): Promise<{ access_token: string; user: AuthenticatedUser }> {
+    async login(user: any): Promise<{ access_token: string }> {
         const connectedStatus = true;
 
         await this.userService.updateUserConnectionStatus(
@@ -143,14 +135,7 @@ export class AuthService implements AuthServiceInterface {
 
         const token = await this.jwtService.signAsync(payload);
 
-        return {
-            access_token: token,
-            user: {
-                isAuthenticated: true,
-                id: user.id,
-                roles: [user.role],
-            },
-        };
+        return { access_token: token };
     }
 
     async refreshToken(token: string) {
@@ -172,34 +157,3 @@ export class AuthService implements AuthServiceInterface {
         }
     }
 }
-
-// TODO faire un refresh token ici
-
-// async refreshToken(refreshToken: string): Promise<{ access_token: string }> {
-//     try {
-//     // 1. Vérification du token de rafraîchissement
-//     const payload = this.jwtService.verify(refreshToken, {
-//         secret: process.env.JWT_REFRESH_SECRET,
-//     });
-
-//     // 2. Récupérer l'utilisateur associé à ce token de rafraîchissement
-//     const user = await this.prisma.user.findUnique({
-//         where: { id: payload.id },
-//     });
-
-//     if (!user || user.refreshToken !== refreshToken) {
-//         throw new UnauthorizedException("Token de rafraîchissement invalide");
-//     }
-
-//     // 3. Générer un nouveau token d'accès
-//     const newAccessToken = await this.jwtService.signAsync(
-//         { sub: user.email, id: user.id, role: user.role },
-//         { secret: process.env.JWT_SECRET, expiresIn: '15m' } // Token d'accès de courte durée
-//     );
-
-//     return { access_token: newAccessToken };
-// } catch (error) {
-//     console.error("Erreur lors du rafraîchissement du token :", error);
-//     throw new ForbiddenException("Rafraîchissement du token échoué");
-// }
-// }

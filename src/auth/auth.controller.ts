@@ -26,7 +26,7 @@ export class AuthController {
     async login(@Request() req, @Res({ passthrough: true }) res: Response) {
         const response = await this.authService.login(req.user);
 
-        const { access_token, user } = response;
+        const { access_token } = response;
 
         res.cookie("access_token", access_token, {
             httpOnly: true,
@@ -35,7 +35,7 @@ export class AuthController {
             maxAge: 15 * 60 * 1000, // 15 minutes
         });
 
-        return res.send({ message: "Login successful", user });
+        return "Login successful";
     }
 
     @Post("pre-register")
