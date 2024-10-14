@@ -153,10 +153,6 @@ export class AuthService implements AuthServiceInterface {
         };
     }
 
-    async tokenValidate() {
-        return { message: "Token is valid" };
-    }
-
     async refreshToken(token: string) {
         try {
             const refreshToken = token.replace("Bearer ", "");

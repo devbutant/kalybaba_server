@@ -14,7 +14,6 @@ import { Response } from "express";
 import { LocalAuthGuard } from "../auth/local-auth.guard";
 import { AuthService } from "./auth.service";
 import { PreRegisterDto, RegisterDto } from "./dto/register.dto";
-import { JwtAuthGuard } from "./jwt-auth.guard";
 
 @ApiTags("authentication")
 @Controller("auth")
@@ -26,8 +25,6 @@ export class AuthController {
     @Post("login")
     async login(@Request() req, @Res({ passthrough: true }) res: Response) {
         const response = await this.authService.login(req.user);
-
-        console.log(response);
 
         const { access_token, user } = response;
 
@@ -70,21 +67,14 @@ export class AuthController {
         };
     }
 
-    @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
-    @Post("token-validate")
-    async tokenValidate() {
-        return this.authService.tokenValidate();
-    }
-
     @Get("refresh-token")
     async findAll(@Res({ passthrough: true }) response: Response) {
         return "hey";
     }
 
     @ApiBearerAuth()
-    @Get("check")
-    @UseGuards(JwtAuthGuard)
+    @Get("me")
+    @UseGuards(LocalAuthGuard)
     async checkAuth(@Request() req) {
         return {
             isAuthenticated: true,
