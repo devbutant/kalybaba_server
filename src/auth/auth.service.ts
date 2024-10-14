@@ -14,6 +14,12 @@ import { AuthServiceInterface } from "./auth.interface";
 import { LoginDto } from "./dto/login.dto";
 import { PreRegisterDto, RegisterDto } from "./dto/register.dto";
 
+type AuthenticatedUser = {
+    isAuthenticated: boolean;
+    id: string;
+    roles: string[] | null;
+};
+
 @Injectable()
 export class AuthService implements AuthServiceInterface {
     constructor(
@@ -123,11 +129,27 @@ export class AuthService implements AuthServiceInterface {
         return result;
     }
 
-    async login(user: any): Promise<{ access_token: string }> {
+    async login(
+        user: any
+    ): Promise<{ access_token: string; user: AuthenticatedUser }> {
+        const connectedStatus = true;
+
+        await this.userService.updateUserConnectionStatus(
+            user.email,
+            connectedStatus
+        );
+
         const payload = { sub: user.email, id: user.id, role: user.role };
 
+        const token = await this.jwtService.signAsync(payload);
+
         return {
-            access_token: await this.jwtService.signAsync(payload),
+            access_token: token,
+            user: {
+                isAuthenticated: true,
+                id: user.id,
+                roles: [user.role],
+            },
         };
     }
 

@@ -25,7 +25,11 @@ export class AuthController {
     @UsePipes(new ValidationPipe())
     @Post("login")
     async login(@Request() req, @Res({ passthrough: true }) res: Response) {
-        const { access_token } = await this.authService.login(req.user);
+        const response = await this.authService.login(req.user);
+
+        console.log(response);
+
+        const { access_token, user } = response;
 
         res.cookie("access_token", access_token, {
             httpOnly: true,
@@ -34,7 +38,7 @@ export class AuthController {
             maxAge: 15 * 60 * 1000, // 15 minutes
         });
 
-        return res.send({ message: "Login successful" });
+        return res.send({ message: "Login successful", user });
     }
 
     @Post("pre-register")
