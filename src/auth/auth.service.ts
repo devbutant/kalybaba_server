@@ -138,6 +138,17 @@ export class AuthService implements AuthServiceInterface {
         return { access_token: token };
     }
 
+    async logout(user: any): Promise<string> {
+        const connectedStatus = false;
+
+        await this.userService.updateUserConnectionStatus(
+            user.email,
+            connectedStatus
+        );
+
+        return "Logout successful";
+    }
+
     async refreshToken(token: string) {
         try {
             const refreshToken = token.replace("Bearer ", "");

@@ -39,6 +39,13 @@ export class AuthController {
         return "Login successful";
     }
 
+    @Post("logout")
+    async logout(@Request() req, @Res({ passthrough: true }) res: Response) {
+        await this.authService.logout(req.user);
+        res.clearCookie("access_token");
+        return "Logout successful";
+    }
+
     @Post("pre-register")
     async preRegister(@Body() userRegisterData: PreRegisterDto) {
         return this.authService.completeTheProfile(userRegisterData);
