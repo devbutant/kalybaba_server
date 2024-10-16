@@ -6,6 +6,7 @@ import {
     Param,
     Patch,
     Post,
+    Request,
     UseGuards,
 } from "@nestjs/common";
 
@@ -32,14 +33,15 @@ export class AdController {
         return this.adService.ads();
     }
 
+    @Get("current-user")
+    findMyAds(@Request() req) {
+        const userId = req.user.id;
+        return this.adService.getMyAds(userId);
+    }
+
     @Get("/:id")
     findOne(@Param("id") id: string) {
         return this.adService.ad(id);
-    }
-
-    @Get("user/:id")
-    findByUser(@Param("id") id: string) {
-        return this.adService.getAdsByUser(id);
     }
 
     @Patch(":id")

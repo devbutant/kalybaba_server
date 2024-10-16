@@ -14,6 +14,7 @@ import { Response } from "express";
 import { LocalAuthGuard } from "../auth/local-auth.guard";
 import { AuthService } from "./auth.service";
 import { PreRegisterDto, RegisterDto } from "./dto/register.dto";
+import { JwtAuthGuard } from "./jwt-auth.guard";
 
 @ApiTags("authentication")
 @Controller("auth")
@@ -74,7 +75,7 @@ export class AuthController {
 
     @ApiBearerAuth()
     @Get("me")
-    @UseGuards(LocalAuthGuard)
+    @UseGuards(JwtAuthGuard)
     async checkAuth(@Request() req) {
         return {
             isAuthenticated: true,
