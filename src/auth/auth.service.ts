@@ -54,7 +54,7 @@ export class AuthService implements AuthServiceInterface {
         }
     }
 
-    async completeTheProfile(userRegisterData: PreRegisterDto): Promise<void> {
+    async preRegister(userRegisterData: PreRegisterDto): Promise<void> {
         const existingUser = await this.prisma.user.findUnique({
             where: { email: userRegisterData.email },
         });

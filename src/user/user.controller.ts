@@ -6,10 +6,14 @@ import {
     Param,
     Patch,
     Request,
+    Res,
     UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { User as UserModel } from "@prisma/client";
+import { Response } from "express";
+import { AuthService } from "src/auth/auth.service";
+import { LocalAuthGuard } from "src/auth/local-auth.guard";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { UserService } from "./user.service";
@@ -19,7 +23,10 @@ import { UserService } from "./user.service";
 @Controller("users")
 @UseGuards(JwtAuthGuard)
 export class UserController {
-    constructor(private readonly userService: UserService) {}
+    constructor(
+        private readonly userService: UserService,
+        private readonly authService: AuthService
+    ) {}
 
     @Patch("connected")
     async updateUserConnectionStatus(
@@ -53,16 +60,30 @@ export class UserController {
         return this.userService.user({ id: id });
     }
 
+    @UseGuards(LocalAuthGuard)
     @Patch(":id")
     async updateUser(
         @Param("id") id: string, // string by default, to convert to number, use +id
-        @Body() userUpdated: UpdateUserDto
+        @Body() userUpdated: UpdateUserDto,
+        @Request() req,
+        @Res({ passthrough: true }) res: Response
     ): Promise<UserModel> {
         try {
             const updatedUser = await this.userService.updateUser(
                 id,
                 userUpdated
             );
+
+            const response = await this.authService.login(req.user);
+            const { access_token } = response;
+
+            res.cookie("access_token", access_token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "strict",
+                maxAge: 15 * 60 * 1000, // 15 minutes
+            });
+
             return updatedUser;
         } catch (error: unknown) {
             throw new Error(

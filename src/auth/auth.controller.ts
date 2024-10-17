@@ -39,6 +39,7 @@ export class AuthController {
         return "Login successful";
     }
 
+    @UseGuards(JwtAuthGuard)
     @Post("logout")
     async logout(@Request() req, @Res({ passthrough: true }) res: Response) {
         await this.authService.logout(req.user);
@@ -48,7 +49,7 @@ export class AuthController {
 
     @Post("pre-register")
     async preRegister(@Body() userRegisterData: PreRegisterDto) {
-        return this.authService.completeTheProfile(userRegisterData);
+        return this.authService.preRegister(userRegisterData);
     }
 
     @Post("register")
@@ -57,22 +58,33 @@ export class AuthController {
         return user;
     }
 
+    // @UseGuards(LocalAuthGuard)
+    // @UsePipes(new ValidationPipe())
+
     @Post("confirm-email")
-    async confirmEmail(@Body() { token }: { token: string }) {
+    async confirmEmail(
+        @Body() { token }: { token: string },
+        @Res({ passthrough: true }) res: Response
+    ) {
+        // @Post("confirm-email")
+        // async confirmEmail(@Body() { token }: { token: string }) {
         const { valid, user } =
             await this.authService.validateEmailToken(token);
 
         if (valid) {
-            const loginResponse = await this.authService.login(user);
+            const { access_token } = await this.authService.login(user);
+
+            res.cookie("access_token", access_token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "strict",
+                maxAge: 15 * 60 * 1000, // 15 minutes
+            });
+
             return {
                 message: "Email confirmé avec succès et utilisateur connecté.",
-                ...loginResponse,
             };
         }
-
-        return {
-            message: "Le token est invalide ou l'email n'a pas pu être validé.",
-        };
     }
 
     @Get("refresh-token")
