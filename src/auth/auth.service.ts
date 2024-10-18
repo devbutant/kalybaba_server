@@ -54,7 +54,7 @@ export class AuthService implements AuthServiceInterface {
         }
     }
 
-    async completeTheProfile(userRegisterData: PreRegisterDto): Promise<void> {
+    async preRegister(userRegisterData: PreRegisterDto): Promise<void> {
         const existingUser = await this.prisma.user.findUnique({
             where: { email: userRegisterData.email },
         });
@@ -122,16 +122,58 @@ export class AuthService implements AuthServiceInterface {
         const { password: userPassword, ...result } = user;
         return result;
     }
+    private async generateAuthToken(
+        user: any,
+        role: string
+    ): Promise<{ access_token: string }> {
+        const payload = { sub: user.email, id: user.id, role };
+        const token = await this.jwtService.signAsync(payload);
 
-    async login(user: any): Promise<{ access_token: string }> {
-        const payload = { sub: user.email, id: user.id, role: user.role };
-
-        return {
-            access_token: await this.jwtService.signAsync(payload),
-        };
+        return { access_token: token };
     }
 
-    async tokenValidate() {
-        return { message: "Token is valid" };
+    async login(user: any): Promise<{ access_token: string }> {
+        const connectedStatus = true;
+
+        await this.userService.updateUserConnectionStatus(
+            user.email,
+            connectedStatus
+        );
+
+        return this.generateAuthToken(user, user.role);
+    }
+
+    async activateUser(user: any): Promise<{ access_token: string }> {
+        return this.generateAuthToken(user, "USER");
+    }
+
+    async logout(user: any): Promise<string> {
+        const connectedStatus = false;
+
+        await this.userService.updateUserConnectionStatus(
+            user.email,
+            connectedStatus
+        );
+
+        return "Logout successful";
+    }
+
+    async refreshToken(token: string) {
+        try {
+            const refreshToken = token.replace("Bearer ", "");
+
+            const payload = this.jwtService.verify(refreshToken, {
+                secret: process.env.JWT_REFRESH_SECRET,
+            });
+
+            const newAccessToken = this.jwtService.sign(
+                { userId: payload.userId, email: payload.email },
+                { secret: process.env.JWT_ACCESS_SECRET, expiresIn: "15m" }
+            );
+
+            return { accessToken: newAccessToken };
+        } catch (error) {
+            throw new UnauthorizedException("Invalid refresh token");
+        }
     }
 }

@@ -1,13 +1,16 @@
 import {
     Body,
     Controller,
+    Get,
     Post,
     Request,
+    Res,
     UseGuards,
     UsePipes,
     ValidationPipe,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { Response } from "express";
 import { LocalAuthGuard } from "../auth/local-auth.guard";
 import { AuthService } from "./auth.service";
 import { PreRegisterDto, RegisterDto } from "./dto/register.dto";
@@ -21,13 +24,31 @@ export class AuthController {
     @UseGuards(LocalAuthGuard)
     @UsePipes(new ValidationPipe())
     @Post("login")
-    async login(@Request() req) {
-        return this.authService.login(req.user);
+    async login(@Request() req, @Res({ passthrough: true }) res: Response) {
+        const response = await this.authService.login(req.user);
+        const { access_token } = response;
+
+        res.cookie("access_token", access_token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+            maxAge: 60 * 60 * 1000, // 1 hour
+        });
+
+        return "Login successful";
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Post("logout")
+    async logout(@Request() req, @Res({ passthrough: true }) res: Response) {
+        await this.authService.logout(req.user);
+        res.clearCookie("access_token");
+        return "Logout successful";
     }
 
     @Post("pre-register")
     async preRegister(@Body() userRegisterData: PreRegisterDto) {
-        return this.authService.completeTheProfile(userRegisterData);
+        return this.authService.preRegister(userRegisterData);
     }
 
     @Post("register")
@@ -36,28 +57,47 @@ export class AuthController {
         return user;
     }
 
+    // @UseGuards(LocalAuthGuard)
+    // @UsePipes(new ValidationPipe())
+
     @Post("confirm-email")
-    async confirmEmail(@Body() { token }: { token: string }) {
+    async confirmEmail(
+        @Body() { token }: { token: string },
+        @Res({ passthrough: true }) res: Response
+    ) {
+        // @Post("confirm-email")
+        // async confirmEmail(@Body() { token }: { token: string }) {
         const { valid, user } =
             await this.authService.validateEmailToken(token);
 
         if (valid) {
-            const loginResponse = await this.authService.login(user);
+            const { access_token } = await this.authService.login(user);
+
+            res.cookie("access_token", access_token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "strict",
+                maxAge: 15 * 60 * 1000, // 15 minutes
+            });
+
             return {
                 message: "Email confirmé avec succès et utilisateur connecté.",
-                ...loginResponse,
             };
         }
+    }
 
-        return {
-            message: "Le token est invalide ou l'email n'a pas pu être validé.",
-        };
+    @Get("refresh-token")
+    async findAll(@Res({ passthrough: true }) response: Response) {
+        return "hey";
     }
 
     @ApiBearerAuth()
+    @Get("me")
     @UseGuards(JwtAuthGuard)
-    @Post("token-validate")
-    async tokenValidate() {
-        return this.authService.tokenValidate();
+    async checkAuth(@Request() req) {
+        return {
+            isAuthenticated: true,
+            user: req.user,
+        };
     }
 }
