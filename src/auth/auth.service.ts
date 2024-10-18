@@ -122,6 +122,15 @@ export class AuthService implements AuthServiceInterface {
         const { password: userPassword, ...result } = user;
         return result;
     }
+    private async generateAuthToken(
+        user: any,
+        role: string
+    ): Promise<{ access_token: string }> {
+        const payload = { sub: user.email, id: user.id, role };
+        const token = await this.jwtService.signAsync(payload);
+
+        return { access_token: token };
+    }
 
     async login(user: any): Promise<{ access_token: string }> {
         const connectedStatus = true;
@@ -131,11 +140,11 @@ export class AuthService implements AuthServiceInterface {
             connectedStatus
         );
 
-        const payload = { sub: user.email, id: user.id, role: user.role };
+        return this.generateAuthToken(user, user.role);
+    }
 
-        const token = await this.jwtService.signAsync(payload);
-
-        return { access_token: token };
+    async activateUser(user: any): Promise<{ access_token: string }> {
+        return this.generateAuthToken(user, "USER");
     }
 
     async logout(user: any): Promise<string> {

@@ -26,14 +26,13 @@ export class AuthController {
     @Post("login")
     async login(@Request() req, @Res({ passthrough: true }) res: Response) {
         const response = await this.authService.login(req.user);
-
         const { access_token } = response;
 
         res.cookie("access_token", access_token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
-            maxAge: 15 * 60 * 1000, // 15 minutes
+            maxAge: 60 * 60 * 1000, // 1 hour
         });
 
         return "Login successful";

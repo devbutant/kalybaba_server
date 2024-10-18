@@ -13,7 +13,6 @@ import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { User as UserModel } from "@prisma/client";
 import { Response } from "express";
 import { AuthService } from "src/auth/auth.service";
-import { LocalAuthGuard } from "src/auth/local-auth.guard";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { UserService } from "./user.service";
@@ -60,13 +59,12 @@ export class UserController {
         return this.userService.user({ id: id });
     }
 
-    @UseGuards(LocalAuthGuard)
     @Patch(":id")
     async updateUser(
-        @Param("id") id: string, // string by default, to convert to number, use +id
-        @Body() userUpdated: UpdateUserDto,
+        @Param("id") id: string,
         @Request() req,
-        @Res({ passthrough: true }) res: Response
+        @Res({ passthrough: true }) res: Response,
+        @Body() userUpdated: UpdateUserDto
     ): Promise<UserModel> {
         try {
             const updatedUser = await this.userService.updateUser(
@@ -74,14 +72,14 @@ export class UserController {
                 userUpdated
             );
 
-            const response = await this.authService.login(req.user);
+            const response = await this.authService.activateUser(req.user);
             const { access_token } = response;
 
             res.cookie("access_token", access_token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: "strict",
-                maxAge: 15 * 60 * 1000, // 15 minutes
+                maxAge: 60 * 60 * 1000, // 1 hour
             });
 
             return updatedUser;
