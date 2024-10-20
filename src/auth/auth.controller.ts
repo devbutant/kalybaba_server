@@ -42,7 +42,11 @@ export class AuthController {
     @Post("logout")
     async logout(@Request() req, @Res({ passthrough: true }) res: Response) {
         await this.authService.logout(req.user);
-        res.clearCookie("access_token");
+        res.clearCookie("access_token", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+        });
         return "Logout successful";
     }
 
