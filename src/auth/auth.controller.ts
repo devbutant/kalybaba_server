@@ -30,7 +30,7 @@ export class AuthController {
 
         res.cookie("access_token", access_token, {
             httpOnly: true,
-            secure: true,
+            secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
             maxAge: 60 * 60 * 1000, // 1 hour
         });
@@ -57,16 +57,11 @@ export class AuthController {
         return user;
     }
 
-    // @UseGuards(LocalAuthGuard)
-    // @UsePipes(new ValidationPipe())
-
     @Post("confirm-email")
     async confirmEmail(
         @Body() { token }: { token: string },
         @Res({ passthrough: true }) res: Response
     ) {
-        // @Post("confirm-email")
-        // async confirmEmail(@Body() { token }: { token: string }) {
         const { valid, user } =
             await this.authService.validateEmailToken(token);
 
@@ -75,7 +70,7 @@ export class AuthController {
 
             res.cookie("access_token", access_token, {
                 httpOnly: true,
-                secure: true,
+                secure: process.env.NODE_ENV === "production",
                 sameSite: "strict",
                 maxAge: 15 * 60 * 1000, // 15 minutes
             });
