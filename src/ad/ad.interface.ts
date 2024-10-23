@@ -8,7 +8,7 @@ export interface AdServiceInterface {
     ads(paginationParams: {
         page?: number;
         perPage?: number;
-    }): Promise<PaginatorTypes.PaginatedResult<Ad>>; // Mise à jour ici
+    }): Promise<PaginatorTypes.PaginatedResult<Ad>>;
     getMyAds(id: string): Promise<Ad[]>;
     ad(id: string): Promise<Ad>;
     updateAd(id: string, udpdateAdDto: UpdateAdDto): Promise<Ad>;
