@@ -81,7 +81,7 @@ export class UserController {
                 sameSite:
                     process.env.NODE_ENV === "production" ? "none" : "strict",
                 maxAge: 60 * 60 * 1000, // 1 hour
-                domain: process.env.CLIENT_URL,
+                domain: process.env.CLIENT_DOMAIN,
             });
 
             return updatedUser;
