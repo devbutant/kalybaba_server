@@ -33,7 +33,6 @@ export class AuthController {
             secure: process.env.NODE_ENV === "production",
             sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
             maxAge: 60 * 60 * 1000, // 1 hour
-            domain: process.env.CLIENT_DOMAIN,
         });
 
         return "Login successful";
@@ -79,7 +78,6 @@ export class AuthController {
                 sameSite:
                     process.env.NODE_ENV === "production" ? "none" : "strict",
                 maxAge: 15 * 60 * 1000, // 15 minutes
-                domain: process.env.CLIENT_DOMAIN,
             });
 
             return {

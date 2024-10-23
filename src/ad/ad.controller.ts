@@ -6,6 +6,7 @@ import {
     Param,
     Patch,
     Post,
+    Query,
     Request,
     UseGuards,
 } from "@nestjs/common";
@@ -29,8 +30,11 @@ export class AdController {
     }
 
     @Get()
-    findAll() {
-        return this.adService.ads();
+    async findAll(
+        @Query("page") page: number = 1,
+        @Query("perPage") perPage: number = 10
+    ) {
+        return this.adService.ads({ page, perPage });
     }
 
     @Get("current-user")
