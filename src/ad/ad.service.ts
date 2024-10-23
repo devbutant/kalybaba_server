@@ -1,9 +1,12 @@
 import { Injectable } from "@nestjs/common";
+import { PaginatorTypes, paginator } from "@nodeteam/nestjs-prisma-pagination";
 import { Ad, Prisma } from "@prisma/client";
 import { PrismaService } from "../prisma/prisma.service";
 import { AdServiceInterface } from "./ad.interface";
 import { CreateAdDto } from "./dto/create-ad.dto";
 import { UpdateAdDto } from "./dto/update-ad.dto";
+
+const paginate: PaginatorTypes.PaginateFunction = paginator({ perPage: 10 });
 
 @Injectable()
 export class AdService implements AdServiceInterface {
@@ -15,15 +18,28 @@ export class AdService implements AdServiceInterface {
         });
     }
 
-    async ads(): Promise<Ad[]> {
-        return this.prisma.ad.findMany({
-            include: {
-                author: true,
+    async ads({
+        page = 1,
+        perPage = 10,
+    }: {
+        page?: number;
+        perPage?: number;
+    }): Promise<PaginatorTypes.PaginatedResult<Ad>> {
+        return paginate(
+            this.prisma.ad,
+            {
+                include: {
+                    author: true,
+                },
+                orderBy: {
+                    createdAt: "desc",
+                },
             },
-            orderBy: {
-                createdAt: "desc",
-            },
-        });
+            {
+                page,
+                perPage,
+            }
+        );
     }
 
     async getMyAds(id: string): Promise<Ad[]> {
