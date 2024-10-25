@@ -4,6 +4,7 @@ import { Ad, Prisma } from "@prisma/client";
 import { PrismaService } from "../prisma/prisma.service";
 import { AdServiceInterface } from "./ad.interface";
 import { CreateAdDto } from "./dto/create-ad.dto";
+import { PaginationDto } from "./dto/page-dto";
 import { UpdateAdDto } from "./dto/update-ad.dto";
 
 const paginate: PaginatorTypes.PaginateFunction = paginator({ perPage: 10 });
@@ -42,16 +43,27 @@ export class AdService implements AdServiceInterface {
         );
     }
 
-    async getMyAds(id: string): Promise<Ad[]> {
-        return this.prisma.ad.findMany({
-            where: { authorId: id },
-            include: {
-                author: true,
+    async getMyAds(
+        pagination: PaginationDto
+    ): Promise<PaginatorTypes.PaginatedResult<Ad>> {
+        const { id, page, perPage } = pagination;
+
+        return paginate(
+            this.prisma.ad,
+            {
+                where: { authorId: id },
+                include: {
+                    author: true,
+                },
+                orderBy: {
+                    createdAt: "desc",
+                },
             },
-            orderBy: {
-                createdAt: "desc",
-            },
-        });
+            {
+                page,
+                perPage,
+            }
+        );
     }
 
     async ad(id: string): Promise<Ad> {
