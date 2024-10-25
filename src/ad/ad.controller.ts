@@ -38,9 +38,14 @@ export class AdController {
     }
 
     @Get("current-user")
-    findMyAds(@Request() req) {
-        const userId = req.user.id;
-        return this.adService.getMyAds(userId);
+    findMyAds(
+        @Request() req,
+        @Query("page") page: number = 1,
+        @Query("perPage") perPage: number = 10
+    ) {
+        const id = req.user.id;
+
+        return this.adService.getMyAds({ id, page, perPage });
     }
 
     @Get("/:id")

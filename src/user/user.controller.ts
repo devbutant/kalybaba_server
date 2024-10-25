@@ -64,12 +64,13 @@ export class UserController {
         @Param("id") id: string,
         @Request() req,
         @Res({ passthrough: true }) res: Response,
-        @Body() userUpdated: UpdateUserDto
+        @Body() user: UpdateUserDto
     ): Promise<UserModel> {
         try {
-            const updatedUser = await this.userService.updateUser(
+            const updatedUser = { ...user, role: "USER" };
+            const activatedUser = await this.userService.updateUser(
                 id,
-                userUpdated
+                updatedUser
             );
 
             const response = await this.authService.activateUser(req.user);
@@ -83,7 +84,7 @@ export class UserController {
                 maxAge: 60 * 60 * 1000, // 1 hour
             });
 
-            return updatedUser;
+            return activatedUser;
         } catch (error: unknown) {
             throw new Error(
                 error instanceof Error ? error.message : "An error occured"
