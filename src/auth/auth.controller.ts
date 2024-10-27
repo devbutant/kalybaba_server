@@ -31,7 +31,7 @@ export class AuthController {
         res.cookie("access_token", access_token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            // sameSite: "none",
+            sameSite: "none",
             maxAge: 60 * 60 * 1000, // 1 hour
         });
 
@@ -45,7 +45,7 @@ export class AuthController {
         res.clearCookie("access_token", {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            // sameSite: "none",
+            sameSite: "none",
             // sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         });
         return "Logout successful";
@@ -76,6 +76,7 @@ export class AuthController {
             res.cookie("access_token", access_token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
+                sameSite: "none",
                 // sameSite:
                 //     process.env.NODE_ENV === "production" ? "none" : "lax",
                 maxAge: 15 * 60 * 1000, // 15 minutes
