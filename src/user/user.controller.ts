@@ -80,7 +80,7 @@ export class UserController {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite:
-                    process.env.NODE_ENV === "production" ? "strict" : "lax",
+                    process.env.NODE_ENV === "production" ? "none" : "lax",
                 maxAge: 60 * 60 * 1000, // 1 hour
             });
 
