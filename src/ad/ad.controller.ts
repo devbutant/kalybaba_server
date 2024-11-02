@@ -1,4 +1,5 @@
 import {
+    BadRequestException,
     Body,
     Controller,
     Delete,
@@ -8,14 +9,63 @@ import {
     Post,
     Query,
     Request,
+    UploadedFiles,
     UseGuards,
+    UseInterceptors,
 } from "@nestjs/common";
+import { FilesInterceptor } from "@nestjs/platform-express";
 
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { AdService } from "./ad.service";
-import { CreateAdDto } from "./dto/create-ad.dto";
 import { UpdateAdDto } from "./dto/update-ad.dto";
+
+import {
+    IsDate,
+    IsEnum,
+    IsString,
+    MaxLength,
+    MinLength,
+} from "class-validator";
+
+import { CategoryEnum, TypeEnum } from "@prisma/client";
+
+export class CreateAdDtoWithPriceInString {
+    @IsString()
+    @MinLength(2)
+    @MaxLength(30)
+    title: string;
+
+    @IsString()
+    @MinLength(2)
+    @MaxLength(200)
+    description: string;
+
+    @IsString()
+    @MinLength(2)
+    @MaxLength(100)
+    city: string;
+
+    // photos: Express.Multer.File[];
+
+    @IsString()
+    price: string;
+
+    authorId: string;
+    author: { connect: { id: string } };
+
+    @IsEnum(TypeEnum)
+    typeEnum: TypeEnum;
+
+    @IsEnum(CategoryEnum)
+    categoryEnum: CategoryEnum;
+
+    @IsDate()
+    createdAt: Date = new Date(); // Valeur par défaut : Date actuelle
+
+    @IsDate()
+    updatedAt: Date = new Date(); // Valeur par défaut : Date actuelle
+}
 
 @ApiTags("ads")
 @ApiBearerAuth()
@@ -25,8 +75,25 @@ export class AdController {
     constructor(private readonly adService: AdService) {}
 
     @Post()
-    create(@Body() createAdDto: CreateAdDto) {
-        return this.adService.createAd(createAdDto);
+    @UseInterceptors(FilesInterceptor("photos"))
+    create(
+        @Body() createAdDto: CreateAdDtoWithPriceInString,
+        @UploadedFiles() files: Express.Multer.File[]
+    ) {
+        const priceAsNumber = parseFloat(createAdDto.price);
+
+        if (isNaN(priceAsNumber)) {
+            throw new BadRequestException(
+                "Le prix doit être un nombre valide."
+            );
+        }
+
+        const transformedDto = {
+            ...createAdDto,
+            price: priceAsNumber,
+        };
+
+        return this.adService.createAd(transformedDto, files);
     }
 
     @Get()

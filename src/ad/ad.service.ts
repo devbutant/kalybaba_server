@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PaginatorTypes, paginator } from "@nodeteam/nestjs-prisma-pagination";
 import { Ad, Prisma } from "@prisma/client";
+import fs from "fs";
 import { PrismaService } from "../prisma/prisma.service";
 import { AdServiceInterface } from "./ad.interface";
 import { CreateAdDto } from "./dto/create-ad.dto";
@@ -13,10 +14,32 @@ const paginate: PaginatorTypes.PaginateFunction = paginator({ perPage: 10 });
 export class AdService implements AdServiceInterface {
     constructor(private prisma: PrismaService) {}
 
-    async createAd(createAdDto: CreateAdDto) {
-        return this.prisma.ad.create({
+    async createAd(
+        createAdDto: CreateAdDto,
+        files: Express.Multer.File[]
+    ): Promise<string> {
+        console.log("data from service ", createAdDto, files);
+
+        const fileNames: string[] = [];
+        for (const file of files) {
+            // Vous devez sauvegarder le fichier à un endroit dans votre serveur
+            // Cela peut être dans un dossier local ou dans un service de stockage
+            const filePath = `uploads/${file.originalname}`;
+            await fs.promises.writeFile(filePath, file.buffer);
+            fileNames.push(filePath);
+        }
+
+        const res = await this.prisma.ad.create({
             data: createAdDto as Prisma.AdCreateInput,
+            // {
+            //     ...(createAdDto as Prisma.AdCreateInput),
+            //     // photos: {
+            //     //     set: fileNames,
+            //     // },
+            // },
         });
+        console.log(res);
+        return "Ad created";
     }
 
     async ads({
