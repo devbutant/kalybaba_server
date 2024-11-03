@@ -9,7 +9,6 @@ import {
     Post,
     Query,
     Request,
-    Res,
     UploadedFiles,
     UseGuards,
     UseInterceptors,
@@ -17,6 +16,7 @@ import {
 import { FilesInterceptor } from "@nestjs/platform-express";
 
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { put } from "@vercel/blob";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { AdService } from "./ad.service";
 import { UpdateAdDto } from "./dto/update-ad.dto";
@@ -30,9 +30,6 @@ import {
 } from "class-validator";
 
 import { CategoryEnum, TypeEnum } from "@prisma/client";
-
-import { Response } from "express";
-import path from "path";
 
 export class CreateAdDtoWithPriceInString {
     @IsString()
@@ -80,7 +77,7 @@ export class AdController {
 
     @Post()
     @UseInterceptors(FilesInterceptor("photos"))
-    create(
+    async create(
         @Body() createAdDto: CreateAdDtoWithPriceInString,
         @UploadedFiles() files: Express.Multer.File[]
     ) {
@@ -97,7 +94,21 @@ export class AdController {
             price: priceAsNumber,
         };
 
-        return this.adService.createAd(transformedDto, files);
+        const uploadPromises = files.map(async (file) => {
+            const { url } = await put(file.originalname, file.buffer, {
+                access: "public",
+            });
+            return url; // Retourne l'URL publique du fichier
+        });
+
+        console.log("uploadPromises", uploadPromises);
+
+        const photos = await Promise.all(uploadPromises);
+
+        console.log("photos", photos);
+
+        // return this.adService.createAd(transformedDto, files);
+        return this.adService.createAd({ ...transformedDto, photos });
     }
 
     @Get()
@@ -133,20 +144,20 @@ export class AdController {
         return this.adService.removeAd(id);
     }
 
-    @Get("uploads/:fileDirectory/:filename")
-    async getPhoto(
-        @Param("fileDirectory") fileDirectory: string,
-        @Param("filename") filename: string,
-        @Res() res: Response
-    ) {
-        const filePath = path.join(
-            __dirname,
-            "../../../uploads",
-            fileDirectory,
-            filename
-        );
-        console.log(filePath);
+    // @Get("uploads/:fileDirectory/:filename")
+    // async getPhoto(
+    //     @Param("fileDirectory") fileDirectory: string,
+    //     @Param("filename") filename: string,
+    //     @Res() res: Response
+    // ) {
+    //     const filePath = path.join(
+    //         __dirname,
+    //         "../../../uploads",
+    //         fileDirectory,
+    //         filename
+    //     );
+    //     console.log(filePath);
 
-        return res.sendFile(filePath);
-    }
+    //     return res.sendFile(filePath);
+    // }
 }

@@ -1,4 +1,5 @@
 import {
+    IsArray,
     IsDate,
     IsEnum,
     IsNumber,
@@ -20,6 +21,9 @@ export class CreateAdDto {
     @MinLength(2)
     @MaxLength(200)
     description: string;
+
+    @IsArray()
+    photos: string[];
 
     @IsString()
     @MinLength(2)

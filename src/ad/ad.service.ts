@@ -1,9 +1,6 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { PaginatorTypes, paginator } from "@nodeteam/nestjs-prisma-pagination";
 import { Ad, Prisma } from "@prisma/client";
-import fs from "fs";
-import path from "path";
-import { v4 as uuidv4 } from "uuid";
 import { PrismaService } from "../prisma/prisma.service";
 import { AdServiceInterface } from "./ad.interface";
 import { CreateAdDto } from "./dto/create-ad.dto";
@@ -17,34 +14,29 @@ export class AdService implements AdServiceInterface {
     constructor(private prisma: PrismaService) {}
 
     async createAd(
-        createAdDto: CreateAdDto,
-        files: Express.Multer.File[]
+        createAdDto: CreateAdDto
+        // files: Express.Multer.File[]
     ): Promise<string> {
-        const fileNames: string[] = [];
-        const userDirectory = path.join("uploads", createAdDto.authorId);
+        // const fileNames: string[] = [];
+        // const userDirectory = path.join("uploads", createAdDto.authorId);
 
-        try {
-            await fs.promises.mkdir(userDirectory, { recursive: true });
-        } catch (err) {
-            throw new BadRequestException(
-                "Erreur lors de la création du dossier de l'utilisateur"
-            );
-        }
+        // try {
+        //     await fs.promises.mkdir(userDirectory, { recursive: true });
+        // } catch (err) {
+        //     throw new BadRequestException(
+        //         "Erreur lors de la création du dossier de l'utilisateur"
+        //     );
+        // }
 
-        for (const file of files) {
-            const uniqueFileName = `${uuidv4()}-${file.originalname}`;
-            const filePath = path.join(userDirectory, uniqueFileName);
-            await fs.promises.writeFile(filePath, file.buffer);
-            fileNames.push(filePath);
-        }
+        // for (const file of files) {
+        //     const uniqueFileName = `${uuidv4()}-${file.originalname}`;
+        //     const filePath = path.join(userDirectory, uniqueFileName);
+        //     await fs.promises.writeFile(filePath, file.buffer);
+        //     fileNames.push(filePath);
+        // }
 
         await this.prisma.ad.create({
-            data: {
-                ...(createAdDto as Prisma.AdCreateInput),
-                photos: {
-                    set: fileNames,
-                },
-            },
+            data: createAdDto as Prisma.AdCreateInput,
         });
         return "Ad created";
     }
