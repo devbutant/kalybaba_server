@@ -9,6 +9,7 @@ import {
     Post,
     Query,
     Request,
+    Res,
     UploadedFiles,
     UseGuards,
     UseInterceptors,
@@ -29,6 +30,9 @@ import {
 } from "class-validator";
 
 import { CategoryEnum, TypeEnum } from "@prisma/client";
+
+import { Response } from "express";
+import path from "path";
 
 export class CreateAdDtoWithPriceInString {
     @IsString()
@@ -111,7 +115,6 @@ export class AdController {
         @Query("perPage") perPage: number = 10
     ) {
         const id = req.user.id;
-
         return this.adService.getMyAds({ id, page, perPage });
     }
 
@@ -128,5 +131,22 @@ export class AdController {
     @Delete(":id")
     remove(@Param("id") id: string) {
         return this.adService.removeAd(id);
+    }
+
+    @Get("uploads/:fileDirectory/:filename")
+    async getPhoto(
+        @Param("fileDirectory") fileDirectory: string,
+        @Param("filename") filename: string,
+        @Res() res: Response
+    ) {
+        const filePath = path.join(
+            __dirname,
+            "../../../uploads",
+            fileDirectory,
+            filename
+        );
+        console.log(filePath);
+
+        return res.sendFile(filePath);
     }
 }

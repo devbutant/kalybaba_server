@@ -1,7 +1,9 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { PaginatorTypes, paginator } from "@nodeteam/nestjs-prisma-pagination";
 import { Ad, Prisma } from "@prisma/client";
 import fs from "fs";
+import path from "path";
+import { v4 as uuidv4 } from "uuid";
 import { PrismaService } from "../prisma/prisma.service";
 import { AdServiceInterface } from "./ad.interface";
 import { CreateAdDto } from "./dto/create-ad.dto";
@@ -18,27 +20,32 @@ export class AdService implements AdServiceInterface {
         createAdDto: CreateAdDto,
         files: Express.Multer.File[]
     ): Promise<string> {
-        console.log("data from service ", createAdDto, files);
-
         const fileNames: string[] = [];
+        const userDirectory = path.join("uploads", createAdDto.authorId);
+
+        try {
+            await fs.promises.mkdir(userDirectory, { recursive: true });
+        } catch (err) {
+            throw new BadRequestException(
+                "Erreur lors de la création du dossier de l'utilisateur"
+            );
+        }
+
         for (const file of files) {
-            // Vous devez sauvegarder le fichier à un endroit dans votre serveur
-            // Cela peut être dans un dossier local ou dans un service de stockage
-            const filePath = `uploads/${file.originalname}`;
+            const uniqueFileName = `${uuidv4()}-${file.originalname}`;
+            const filePath = path.join(userDirectory, uniqueFileName);
             await fs.promises.writeFile(filePath, file.buffer);
             fileNames.push(filePath);
         }
 
-        const res = await this.prisma.ad.create({
-            data: createAdDto as Prisma.AdCreateInput,
-            // {
-            //     ...(createAdDto as Prisma.AdCreateInput),
-            //     // photos: {
-            //     //     set: fileNames,
-            //     // },
-            // },
+        await this.prisma.ad.create({
+            data: {
+                ...(createAdDto as Prisma.AdCreateInput),
+                photos: {
+                    set: fileNames,
+                },
+            },
         });
-        console.log(res);
         return "Ad created";
     }
 
