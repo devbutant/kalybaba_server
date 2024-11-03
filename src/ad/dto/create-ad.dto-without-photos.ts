@@ -1,5 +1,4 @@
 import {
-    IsArray,
     IsDate,
     IsEnum,
     IsString,
@@ -8,9 +7,9 @@ import {
 } from "class-validator";
 
 import { CategoryEnum, TypeEnum } from "@prisma/client";
-import { IsCuid } from "../../../src/decorators/IsCUID";
+import { IsCuid } from "../../decorators/IsCUID";
 
-export class CreateAdDto {
+export class CreateAdDtoWithoutPhotos {
     @IsString()
     @MinLength(2)
     @MaxLength(30)
@@ -20,9 +19,6 @@ export class CreateAdDto {
     @MinLength(2)
     @MaxLength(200)
     description: string;
-
-    @IsArray()
-    photos: string[];
 
     @IsCuid() // Ce décorateur ne sert peut-être à rien ici (vérifie si c'est un CUID ou pas, à voir)
     authorId: string;

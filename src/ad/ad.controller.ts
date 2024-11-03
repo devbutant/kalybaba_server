@@ -1,5 +1,4 @@
 import {
-    BadRequestException,
     Body,
     Controller,
     Delete,
@@ -30,6 +29,7 @@ import {
 } from "class-validator";
 
 import { CategoryEnum, TypeEnum } from "@prisma/client";
+import { CreateAdDtoWithoutPhotos } from "./dto/create-ad.dto-without-photos";
 
 export class CreateAdDtoWithPriceInString {
     @IsString()
@@ -41,16 +41,6 @@ export class CreateAdDtoWithPriceInString {
     @MinLength(2)
     @MaxLength(200)
     description: string;
-
-    @IsString()
-    @MinLength(2)
-    @MaxLength(100)
-    city: string;
-
-    // photos: Express.Multer.File[];
-
-    @IsString()
-    price: string;
 
     authorId: string;
     author: { connect: { id: string } };
@@ -78,22 +68,9 @@ export class AdController {
     @Post()
     @UseInterceptors(FilesInterceptor("photos"))
     async create(
-        @Body() createAdDto: CreateAdDtoWithPriceInString,
+        @Body() createAdDto: CreateAdDtoWithoutPhotos,
         @UploadedFiles() files: Express.Multer.File[]
     ) {
-        const priceAsNumber = parseFloat(createAdDto.price);
-
-        if (isNaN(priceAsNumber)) {
-            throw new BadRequestException(
-                "Le prix doit être un nombre valide."
-            );
-        }
-
-        const transformedDto = {
-            ...createAdDto,
-            price: priceAsNumber,
-        };
-
         const uploadPromises = files.map(async (file) => {
             const { url } = await put(file.originalname, file.buffer, {
                 access: "public",
@@ -102,7 +79,20 @@ export class AdController {
         });
 
         const photos = await Promise.all(uploadPromises);
-        return this.adService.createAd({ ...transformedDto, photos });
+        return this.adService.createAd({ ...createAdDto, photos });
+
+        // const priceAsNumber = parseFloat(createAdDto.price);
+
+        // if (isNaN(priceAsNumber)) {
+        //     throw new BadRequestException(
+        //         "Le prix doit être un nombre valide."
+        //     );
+        // }
+
+        // const transformedDto = {
+        //     ...createAdDto,
+        //     price: priceAsNumber,
+        // };
     }
 
     @Get()

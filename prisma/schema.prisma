@@ -30,11 +30,9 @@ model Ad {
   title       String
   description String?
   photos      String[]
-  city     String
-  price       Float    @default(0)
   author      User     @relation(fields: [authorId], references: [id])
   authorId    String
-  typeEnum    TypeEnum @default(DEMAND)
+  typeEnum    TypeEnum @default(SHARED_SETUP)
   categoryEnum CategoryEnum @default(OTHERS)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -55,20 +53,20 @@ enum Role {
 }
 
 enum TypeEnum {
-  OFFER
-  DEMAND
+  SHARED_SETUP
+  NEED_ADVICE
 }
 
 enum CategoryEnum {
-  VEHICLE
-  REAL_ESTATE
-  MULTIMEDIA
-  HOME
-  LEISURE
-  FASHION
-  CHILDREN
-  ANIMALS
-  SERVICES
-  EMPLOYMENT
+  TECH_AND_GADGETS
+  PRODUCTIVITY
+  GAMING
+  CREATIVE_WORKSPACE
+  STUDY_SPACE
+  HOME_OFFICE
+  DIY_AND_CUSTOM_SETUPS
+  MINIMALIST
+  COZY_SPACES
+  COLLABORATIVE_WORKSPACES
   OTHERS
 }

@@ -1,29 +1,32 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
+import { hashPassword } from "../seed/utils";
+import { users } from "../seed/users";
 
 const prisma = new PrismaClient();
 
 async function main() {
-    // const createdUsers: User[] = [];
+    const createdUsers: User[] = [];
     // Calculer combien d'annonces par utilisateur
     // const adsPerUser = Math.floor(ads.length / users.length);
     // let leftoverAds = ads.length % users.length;
-    // for (const user of users) {
-    //     const hashedPassword = await hashPassword(user.create.password);
-    //     const newUser = await prisma.user.upsert({
-    //         where: { email: user.where.email },
-    //         update: {},
-    //         create: {
-    //             email: user.create.email,
-    //             name: user.create.name,
-    //             password: hashedPassword,
-    //             city: user.create.city,
-    //             phone: user.create.phone,
-    //             role: "USER",
-    //             createdAt: new Date(),
-    //             updatedAt: new Date(),
-    //         },
-    //     });
-    //     createdUsers.push(newUser);
+    for (const user of users) {
+        const hashedPassword = await hashPassword(user.create.password);
+        const newUser = await prisma.user.upsert({
+            where: { email: user.where.email },
+            update: {},
+            create: {
+                email: user.create.email,
+                name: user.create.name,
+                password: hashedPassword,
+                city: user.create.city,
+                phone: user.create.phone,
+                role: "USER",
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+        });
+        createdUsers.push(newUser);
+    }
     //     // Calculer les annonces associées à cet utilisateur
     //     // const startIndex = users.indexOf(user) * adsPerUser;
     //     // const endIndex = startIndex + adsPerUser + (leftoverAds > 0 ? 1 : 0);
