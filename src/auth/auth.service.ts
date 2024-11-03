@@ -176,4 +176,8 @@ export class AuthService implements AuthServiceInterface {
             throw new UnauthorizedException("Invalid refresh token");
         }
     }
+
+    async me(email: string) {
+        return this.userService.user({ email: email });
+    }
 }

@@ -96,9 +96,11 @@ export class AuthController {
     @Get("me")
     @UseGuards(JwtAuthGuard)
     async checkAuth(@Request() req) {
+        const me = await this.authService.me(req.user.email);
+
         return {
             isAuthenticated: true,
-            user: req.user,
+            user: me,
         };
     }
 }

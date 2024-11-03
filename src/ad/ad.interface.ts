@@ -5,7 +5,10 @@ import { PaginationDto } from "./dto/page-dto";
 import { UpdateAdDto } from "./dto/update-ad.dto";
 
 export interface AdServiceInterface {
-    createAd(createAdto: CreateAdDto): Promise<Ad>;
+    createAd(
+        createAdto: CreateAdDto,
+        files: Express.Multer.File[]
+    ): Promise<string>;
     ads(paginationParams: {
         page?: number;
         perPage?: number;

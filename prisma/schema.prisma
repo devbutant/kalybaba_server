@@ -29,6 +29,7 @@ model Ad {
   id          String   @id @default(cuid())
   title       String
   description String?
+  photos      String[]
   city     String
   price       Float    @default(0)
   author      User     @relation(fields: [authorId], references: [id])
