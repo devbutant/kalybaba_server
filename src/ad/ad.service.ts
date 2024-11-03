@@ -13,28 +13,7 @@ const paginate: PaginatorTypes.PaginateFunction = paginator({ perPage: 10 });
 export class AdService implements AdServiceInterface {
     constructor(private prisma: PrismaService) {}
 
-    async createAd(
-        createAdDto: CreateAdDto
-        // files: Express.Multer.File[]
-    ): Promise<string> {
-        // const fileNames: string[] = [];
-        // const userDirectory = path.join("uploads", createAdDto.authorId);
-
-        // try {
-        //     await fs.promises.mkdir(userDirectory, { recursive: true });
-        // } catch (err) {
-        //     throw new BadRequestException(
-        //         "Erreur lors de la création du dossier de l'utilisateur"
-        //     );
-        // }
-
-        // for (const file of files) {
-        //     const uniqueFileName = `${uuidv4()}-${file.originalname}`;
-        //     const filePath = path.join(userDirectory, uniqueFileName);
-        //     await fs.promises.writeFile(filePath, file.buffer);
-        //     fileNames.push(filePath);
-        // }
-
+    async createAd(createAdDto: CreateAdDto): Promise<string> {
         await this.prisma.ad.create({
             data: createAdDto as Prisma.AdCreateInput,
         });

@@ -98,16 +98,10 @@ export class AdController {
             const { url } = await put(file.originalname, file.buffer, {
                 access: "public",
             });
-            return url; // Retourne l'URL publique du fichier
+            return url;
         });
 
-        console.log("uploadPromises", uploadPromises);
-
         const photos = await Promise.all(uploadPromises);
-
-        console.log("photos", photos);
-
-        // return this.adService.createAd(transformedDto, files);
         return this.adService.createAd({ ...transformedDto, photos });
     }
 
@@ -143,21 +137,4 @@ export class AdController {
     remove(@Param("id") id: string) {
         return this.adService.removeAd(id);
     }
-
-    // @Get("uploads/:fileDirectory/:filename")
-    // async getPhoto(
-    //     @Param("fileDirectory") fileDirectory: string,
-    //     @Param("filename") filename: string,
-    //     @Res() res: Response
-    // ) {
-    //     const filePath = path.join(
-    //         __dirname,
-    //         "../../../uploads",
-    //         fileDirectory,
-    //         filename
-    //     );
-    //     console.log(filePath);
-
-    //     return res.sendFile(filePath);
-    // }
 }
